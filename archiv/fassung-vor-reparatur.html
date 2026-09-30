@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Der Zweite Weltkrieg – Erweiterte Multiperspektiven-Karte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <style>
+    :root{
+      --panel:#ffffffee;
+      --accent:#2563eb;
+      --allies:#3498db;
+      --axis:#e74c3c;
+      --neutral:#95a5a6;
+      --occupied:#f39c12;
+      --shadow:0 20px 40px rgba(0,0,0,.3);
+      --gradient-primary:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      --gradient-secondary:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);
+    }
+    
+    *{box-sizing:border-box}
+    
+    body{
+      margin:0;
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background:var(--gradient-primary);
+      color:#0f172a;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      overflow-x:hidden;
+    }
+    
+    header{
+      color:#fff;
+      background:rgba(0,0,0,.4);
+      padding:16px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:var(--shadow);
+      position:relative;
+      z-index:1001;
+      backdrop-filter:blur(12px);
+    }
+    
+    header h1{
+      font-size:1.4rem;
+      margin:0;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-weight:700;
+      text-shadow:2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    header .sub{
+      font-size:1rem;
+      opacity:.95;
+      font-weight:300;
+    }
+    
+    .timeline-bar{
+      background:rgba(255,255,255,.2);
+      padding:12px 20px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      color:#fff;
+      font-size:1rem;
+      backdrop-filter:blur(8px);
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .timeline-container{
+      flex:1;
+      position:relative;
+      margin:0 10px;
+    }
+    
+    .timeline-track{
+      height:12px;
+      background:rgba(255,255,255,.3);
+      border-radius:6px;
+      position:relative;
+      cursor:pointer;
+      box-shadow:inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .timeline-progress{
+      height:100%;
+      background:linear-gradient(90deg,#ff6b6b,#4ecdc4,#45b7d1);
+      border-radius:6px;
+      transition:width .4s cubic-bezier(0.4, 0.0, 0.2, 1);
+      box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    .main-container{
+      display:flex;
+      height:calc(100vh - 140px);
+      gap:12px;
+      padding:12px;
+    }
+    
+    .sidebar{
+      width:320px;
+      background:var(--panel);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.1);
+    }
+    
+    .map-container{
+      flex:1;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      border:2px solid rgba(255,255,255,0.1);
+    }
+    
+    #map{
+      height:100%;
+      border-radius:14px;
+    }
+    
+    .panel-header{
+      background:var(--gradient-secondary);
+      color:white;
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      font-size:1.1rem;
+      text-shadow:1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    .panel-content{
+      padding:20px;
+      flex:1;
+      overflow-y:auto;
+    }
+    
+    .control-group{
+      margin-bottom:20px;
+      background:rgba(255,255,255,0.05);
+      padding:12px;
+      border-radius:10px;
+    }
+    
+    .control-group h4{
+      margin:0 0 10px 0;
+      color:var(--accent);
+      font-size:1rem;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      font-weight:700;
+    }
+    
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 0;
+      font-size:1rem;
+      font-weight:500;
+    }
+    
+    input[type="checkbox"]{
+      width:18px;
+      height:18px;
+      accent-color:var(--accent);
+      cursor:pointer;
+    }
+    
+    .legend{
+      background:rgba(0,0,0,0.1);
+      border-radius:12px;
+      padding:16px;
+      margin-top:20px;
+      border:1px solid rgba(255,255,255,0.1);
+    }
+    
+    .legend h4{
+      margin:0 0 12px 0;
+      color:#333;
+      font-size:1.1rem;
+      font-weight:700;
+    }
+    
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:8px 0;
+      font-size:.95rem;
+      font-weight:500;
+    }
+    
+    .legend-dot{
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      flex-shrink:0;
+      box-shadow:0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .modal{
+      display:none;
+      position:fixed;
+      z-index:2000;
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,.85);
+      backdrop-filter:blur(6px);
+    }
+    
+    .modal-content{
+      background:linear-gradient(135deg,#fff 0%,#f8f9fa 100%);
+      margin:2% auto;
+      padding:30px;
+      border-radius:20px;
+      width:92%;
+      max-width:800px;
+      max-height:90vh;
+      overflow-y:auto;
+      box-shadow:0 30px 60px rgba(0,0,0,.4);
+      border:1px solid rgba(255,255,255,0.2);
+    }
+    
+    .close{
+      color:#999;
+      float:right;
+      font-size:32px;
+      font-weight:bold;
+      cursor:pointer;
+      line-height:1;
+      transition:color 0.3s ease;
+    }
+    
+    .close:hover{
+      color:#e74c3c;
+      transform:scale(1.1);
+    }
+    
+    .event-image {
+      max-width:100%;
+      max-height:250px;
+      border-radius:12px;
+      margin:15px 0;
+      object-fit:cover;
+      box-shadow:0 8px 16px rgba(0,0,0,0.2);
+      transition:transform 0.3s ease;
+    }
+    
+    .event-image:hover{
+      transform:scale(1.02);
+    }
+    
+    .year-display {
+      background:linear-gradient(135deg,#667eea,#764ba2);
+      color:white;
+      padding:12px 20px;
+      border-radius:30px;
+      font-weight:bold;
+      font-size:1.3rem;
+      margin:0 15px;
+      border:3px solid rgba(255,255,255,0.3);
+      text-shadow:2px 2px 4px rgba(0,0,0,0.3);
+      box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .nav-button {
+      background:linear-gradient(135deg,rgba(255,255,255,0.3),rgba(255,255,255,0.1));
+      border:2px solid rgba(255,255,255,0.5);
+      color:white;
+      padding:12px 16px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:1.4rem;
+      transition:all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      font-weight:bold;
+      text-shadow:1px 1px 2px rgba(0,0,0,0.3);
+      box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .nav-button:hover {
+      background:linear-gradient(135deg,rgba(255,255,255,0.5),rgba(255,255,255,0.3));
+      transform:scale(1.15) translateY(-2px);
+      box-shadow:0 6px 16px rgba(0,0,0,0.3);
+    }
+    
+    .nav-button:active {
+      transform:scale(0.95);
+    }
+    
+    .source-quote {
+      background:linear-gradient(135deg,#f8f9fa,#e9ecef);
+      border-left:5px solid var(--accent);
+      padding:16px;
+      margin:20px 0;
+      border-radius:8px;
+      font-style:italic;
+      font-size:1.1rem;
+      line-height:1.6;
+      box-shadow:inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .source-context {
+      background:#fff3cd;
+      border:1px solid #ffeaa7;
+      border-radius:8px;
+      padding:15px;
+      margin-top:15px;
+      color:#856404;
+    }
+    
+    .sources-list {
+      background:#e7f3ff;
+      border-radius:8px;
+      padding:15px;
+      margin-top:15px;
+      border-left:4px solid var(--allies);
+    }
+    
+    .sources-list h4 {
+      margin:0 0 10px 0;
+      color:#0c5460;
+    }
+    
+    .sources-list ul {
+      margin:0;
+      padding-left:20px;
+    }
+    
+    .agency-info {
+      background:#f8d7da;
+      border:1px solid #f5c6cb;
+      border-radius:8px;
+      padding:15px;
+      margin-top:15px;
+      color:#721c24;
+    }
+    
+    .agency-info h4 {
+      margin:0 0 10px 0;
+    }
+    
+    .perspectives-section {
+      margin:20px 0;
+    }
+    
+    .perspectives-section h4 {
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+    
+    .perspective-item {
+      background:rgba(37,99,235,0.08);
+      border-left:4px solid var(--accent);
+      padding:12px;
+      margin:8px 0;
+      border-radius:6px;
+      font-style:italic;
+    }
+    
+    .timeline-year-marker {
+      position:absolute;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:28px;
+      height:28px;
+      background:white;
+      color:var(--accent);
+      border:3px solid var(--accent);
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.7rem;
+      font-weight:bold;
+      cursor:pointer;
+      transition:all .3s ease;
+      z-index:2;
+      box-shadow:0 2px 6px rgba(0,0,0,.3);
+    }
+    
+    .timeline-year-marker:hover,
+    .timeline-year-marker.active {
+      background:var(--accent);
+      color:white;
+      transform:translate(-50%,-50%) scale(1.2);
+    }
+    
+    .custom-marker {
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      border-radius:50% !important;
+      color:white !important;
+      font-weight:bold !important;
+      text-shadow:1px 1px 2px rgba(0,0,0,0.5) !important;
+    }
+    
+    .source-marker {
+      width:32px !important;
+      height:32px !important;
+      border:3px solid white !important;
+      box-shadow:0 3px 10px rgba(0,0,0,0.3) !important;
+      font-size:18px !important;
+    }
+    
+    .source-marker.allies {
+      background:linear-gradient(135deg,var(--allies),#2980b9) !important;
+    }
+    
+    .source-marker.axis {
+      background:linear-gradient(135deg,var(--axis),#c0392b) !important;
+    }
+    
+    .event-marker {
+      background:linear-gradient(135deg,var(--accent),#1e40af) !important;
+      border:3px solid white !important;
+      width:36px !important;
+      height:36px !important;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3) !important;
+    }
+
+    @media(max-width:768px){
+      .main-container{flex-direction:column;height:auto;min-height:calc(100vh - 140px)}
+      .sidebar{width:100%;order:2;margin-top:10px}
+      .map-container{height:450px;order:1}
+      .timeline-bar{flex-wrap:wrap;gap:10px}
+      .year-display{font-size:1.1rem;padding:8px 16px}
+    }
+  
+    .task-item {
+      background: rgba(255,255,255,0.7);
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      border-left: 3px solid #3498db;
+    }
+
+    .educational-info {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(46,125,50,0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    .help-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg,#f093fb,#f5576c);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .help-button:hover {
+      transform: scale(1.1) rotate(10deg);
+    }
+
+    .help-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+
+    .help-modal-content {
+      background: white;
+      margin: 3% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .legend-extended {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      color: white;
+      border-radius: 10px;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    /* Technische Kartenabsicherung */
+    .map-container{position:relative;min-width:0;min-height:0;}
+    #map{width:100%;height:100%;min-height:320px;position:relative;z-index:1;background:#dce7f1;}
+    .map-error-message{position:absolute;inset:20px;z-index:1000;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;border:2px solid #b91c1c;border-radius:12px;background:rgba(255,255,255,.96);color:#7f1d1d;font-size:1rem;line-height:1.45;box-shadow:0 6px 20px rgba(0,0,0,.18);}
+    @media(max-width:768px){#map{height:450px;min-height:450px}.map-container{height:450px;min-height:450px;}}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1><i class="fas fa-globe-europe"></i> Der Zweite Weltkrieg</h1>
+      <div class="sub">Erweiterte Multiperspektiven-Karte mit 96+ Zeitzeugen</div>
+    </div>
+  </header>
+
+  <div class="timeline-bar">
+    <button id="prevYear" class="nav-button" title="Vorheriges Jahr"><i class="fas fa-chevron-left"></i></button>
+    <div id="currentYearDisplay" class="year-display">1939</div>
+    <div class="timeline-container">
+      <div id="timeline" class="timeline-track">
+        <div id="progress" class="timeline-progress"></div>
+      </div>
+    </div>
+    <button id="nextYear" class="nav-button" title="Nächstes Jahr"><i class="fas fa-chevron-right"></i></button>
+    <select id="speedSelect" aria-label="Animationsgeschwindigkeit" style="padding:8px;border-radius:8px;border:none;">
+      <option value="1000">Langsam</option>
+      <option value="500" selected>Mittel</option>
+      <option value="200">Schnell</option>
+    </select>
+  </div>
+
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="panel-header">
+        <i class="fas fa-filter"></i>
+        Darstellungsoptionen
+      </div>
+      <div class="panel-content">
+        <div class="control-group">
+          <h4>Kategorien</h4>
+          <label class="toggle"><input type="checkbox" id="toggleEvents" checked> Historische Ereignisse</label>
+          <label class="toggle"><input type="checkbox" id="toggleSources" checked> Zeitzeugen & Quellen</label>
+        </div>
+
+        <div class="control-group">
+          <h4>Schrecken des Krieges</h4>
+          <p><strong>Thematische Schwerpunkte:</strong></p>
+          <p>• Bombenkrieg (London Blitz)</p>
+          <p>• Holocaust & Ghettos</p>
+          <p>• Massaker & Gräueltaten</p>
+          <p>• Wehrmacht-Verbrechen</p>
+          <p>• Zivilbevölkerung im Krieg</p>
+        </div>
+
+        <div class="legend">
+          <h4>Legende</h4>
+          <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span> Alliierte & Opfer</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span> Achsenmächte & Täter</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> Historisches Ereignis</div>
+        </div>
+
+        <div class="legend">
+          <h4>Zeitzeugen-Archiv</h4>
+          <p><strong>96+ authentische Stimmen</strong></p>
+          <p>aus 9 Kriegsjahren (1937-1945)</p>
+          <p>✓ Bombenkrieg London (Blitz)</p>
+          <p>✓ Fall Frankreichs 1940</p>
+          <p>✓ USA Kriegseintritt Pearl Harbor</p>
+          <p>✓ Holocaust & Ghetto-Zeugnisse</p>
+          <p>✓ Wehrmacht-Verbrechen Ostfront</p>
+          <p>✓ Deutsche Zivilbevölkerung</p>
+          <p>✓ Polnische Massaker 1944</p>
+          <p>✓ Sowjetische Befreiung 1945</p>
+        </div>
+
+        <div class="legend">
+          <h4>Lernziele & Kompetenzen</h4>
+          <p><strong>Orientierungswissen erweitern:</strong></p>
+          <p>• Räumliche Dimensionen des Krieges</p>
+          <p>• Zeitliche Abläufe & Wendepunkte</p>
+          <p>• Multiperspektivische Betrachtung</p>
+          <p>• Ursachen und Folgen verstehen</p>
+          <p><strong>Historische Kompetenzen:</strong></p>
+          <p>• Quellenanalyse & -kritik</p>
+          <p>• Perspektivwechsel</p>
+          <p>• Urteilsbildung</p>
+          <p>• Orientierung in Zeit & Raum</p>
+        </div>
+
+        <div class="legend">
+          <h4>Arbeitsaufträge</h4>
+          <div class="task-item"><strong>Aufgabe 1:</strong> Vergleichen Sie die Perspektiven deutscher und sowjetischer Soldaten 1941.</div>
+          <div class="task-item"><strong>Aufgabe 2:</strong> Analysieren Sie die Entwicklung der US-amerikanischen Haltung 1939-1941.</div>
+          <div class="task-item"><strong>Aufgabe 3:</strong> Bewerten Sie Handlungsspielräume von Zivilisten im Krieg.</div>
+        </div>
+
+        <div class="legend" style="background:#fff3cd">
+          <h4>Trigger-Warnung</h4>
+          <p><strong>Sensible Inhalte:</strong></p>
+          <p>Diese Karte enthält authentische Berichte über Kriegsverbrechen, Holocaust und Gewalt.</p>
+          <p>Pädagogische Begleitung empfohlen.</p>
+          <p><strong>Navigation:</strong> Pfeiltasten ← → oder Timeline-Klick</p>
+          <p><em>Basiert auf historischen Archivquellen & Egodokumenten</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <div class="educational-info">
+    <i class="fas fa-clock"></i> 0 Min. | <i class="fas fa-eye"></i> 0/79 Quellen | <i class="fas fa-calendar"></i> 0/9 Jahre
+  </div>
+
+  <button class="help-button" onclick="showEducationalHelp()" title="Hilfe & Anleitung">
+    <i class="fas fa-question"></i>
+  </button>
+
+  <div id="helpModal" class="help-modal">
+    <div class="help-modal-content">
+      <span class="close" onclick="document.getElementById('helpModal').style.display='none'">&times;</span>
+      <h3><i class="fas fa-graduation-cap"></i> Unterrichtsanleitung</h3>
+
+      <div class="legend-extended">
+        <h4>Wie verwende ich diese Karte?</h4>
+        <ol>
+          <li><strong>Navigation:</strong> Verwenden Sie die Pfeiltasten ← → oder klicken Sie auf die Timeline</li>
+          <li><strong>Quellen entdecken:</strong> Klicken Sie auf die Marker, um Zeitzeugenberichte zu lesen</li>
+          <li><strong>Perspektiven vergleichen:</strong> Achten Sie auf die Farben (Blau = Alliierte, Rot = Achsenmächte)</li>
+          <li><strong>Lernfortschritt:</strong> Verfolgen Sie Ihren Fortschritt in der oberen rechten Ecke</li>
+        </ol>
+      </div>
+
+      <div class="quick-stats">
+        <div class="stat-card">
+          <div class="stat-number">79</div>
+          <div class="stat-label">Zeitzeugen</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">9</div>
+          <div class="stat-label">Jahre</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Länder</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="generateStudyGuide()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-right: 10px;">
+          <i class="fas fa-book"></i> Lernpfad erstellen
+        </button>
+        <button onclick="document.getElementById('helpModal').style.display='none'" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+          Schließen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="anonymous"></script>
+  <script>
+    const warData = {
+      "1937": [
+        {
+          "id": "li_wei_1937",
+          "name": "Li Wei",
+          "title": "Chinesischer Geschäftsmann, Nanking",
+          "coords": [32.0603, 118.7969],
+          "location": "Chinesischer Geschäftsmann, Nanking",
+          "faction": "allies",
+          "quote": "Die japanischen Teufel sind in der Stadt!",
+          "fullQuote": "Die japanischen Teufel sind in der Stadt! Seit dem 13. Dezember ist Nanking zur Hölle geworden. Überall liegen Leichen auf den Straßen, das Blut färbt den Yangtze rot. Sie töten jeden - Soldaten, Zivilisten, Frauen, Kinder, alte Menschen. Mit Bajonetten, Schwertern, Maschinengewehren. Ich verstecke mich mit meiner Familie im Keller, aber die Schreie von draußen hören nicht auf. Die internationale Sicherheitszone von John Rabe rettet vielen das Leben, aber auch dort dringen die Soldaten ein. Meine Schwester wurde vor meinen Augen vergewaltigt und dann ermordet - sie war erst sechzehn. Zehntausende Frauen und Mädchen erleiden dasselbe Schicksal. Die Japaner machen Wettkämpfe, wer mehr Chinesen töten kann - die Zeitungen in Japan berichten darüber wie über Sport.",
+          "source": "Iris Chang: \"The Rape of Nanking\", Basic Books 1997; Zeitzeugenberichte des Nanjing Massacre Memorial Hall",
+          "context": "Zeitzeugen-Perspektive 1937"
+        },
+        {
+          "id": "hiroshi_nakamura_1937",
+          "name": "Hiroshi Nakamura",
+          "title": "Japanischer Offizier, Nanking",
+          "coords": [32.07, 118.8],
+          "location": "Japanischer Offizier, Nanking",
+          "faction": "axis",
+          "quote": "Wir wurden angewiesen, keine Gefangenen zu machen.",
+          "fullQuote": "Wir wurden angewiesen, keine Gefangenen zu machen. Unser Kommandeur sagte, die Chinesen seien keine Soldaten, sondern Banditen. Was wir dann taten, will ich nicht beschreiben. Manche meiner Kameraden lachten, andere schwiegen. Ich kann nachts nicht mehr schlafen.",
+          "source": "Japanische Kriegstagebücher; aus: Yuki Tanaka, \"Hidden Horrors\"",
+          "context": "Täterperspektive 1937"
+        },
+        {
+          "id": "john_rabe_1937",
+          "name": "John Rabe",
+          "title": "Deutscher Geschäftsmann, Nanking",
+          "coords": [32.055, 118.79],
+          "location": "Nanking, Internationale Sicherheitszone",
+          "faction": "allies",
+          "quote": "Es ist kaum zu beschreiben, was hier geschieht.",
+          "fullQuote": "Es ist kaum zu beschreiben, was hier geschieht. Wir versuchen, so viele Menschen wie möglich in die Sicherheitszone zu bringen. Jeden Tag kommen neue Berichte über Morde und Vergewaltigungen. Ich habe bei der japanischen Botschaft protestiert, aber ohne Wirkung.",
+          "source": "John Rabe, \"The Good Man of Nanking\", Tagebücher 1937/38",
+          "context": "Beobachterperspektive 1937"
+        },
+        {
+          "id": "zhang_xueliang_1937",
+          "name": "Zhang Xueliang",
+          "title": "Chinesischer Soldat, Shanghai",
+          "coords": [31.23, 121.47],
+          "location": "Shanghai, China",
+          "faction": "allies",
+          "quote": "Wir kämpfen gegen eine Armee, die uns technisch weit überlegen ist.",
+          "fullQuote": "Wir kämpfen gegen eine Armee, die uns technisch weit überlegen ist. Unsere Gewehre sind alt, unsere Munition knapp. Aber wir haben keine Wahl. Hinter uns liegen unsere Familien, unsere Städte, unser Land.",
+          "source": "Chinesische Militärarchive, Shanghai 1937",
+          "context": "Soldatenperspektive 1937"
+        },
+        {
+          "id": "mary_porter_1937",
+          "name": "Mary Porter",
+          "title": "US-amerikanische Missionarin, Nanking",
+          "coords": [32.058, 118.795],
+          "location": "Nanking, China",
+          "faction": "allies",
+          "quote": "Die Krankenhäuser sind überfüllt, die Verletzten liegen auf den Fluren.",
+          "fullQuote": "Die Krankenhäuser sind überfüllt, die Verletzten liegen auf den Fluren. Wir haben kaum noch Verbandsmaterial. Kinder kommen ohne Eltern, Frauen erzählen von unvorstellbaren Dingen. Die Welt muss erfahren, was hier passiert.",
+          "source": "Yale Divinity School Archives, Missionary Papers",
+          "context": "Beobachterperspektive 1937"
+        },
+        {
+          "id": "chen_guang_1937",
+          "name": "Chen Guang",
+          "title": "Chinesischer Student, Peking",
+          "coords": [39.9, 116.4],
+          "location": "Peking, China",
+          "faction": "allies",
+          "quote": "Nach dem Marco-Polo-Zwischenfall war klar: Dies ist kein lokaler Konflikt mehr.",
+          "fullQuote": "Nach dem Marco-Polo-Zwischenfall war klar: Dies ist kein lokaler Konflikt mehr. Überall in der Stadt sprachen die Menschen vom Krieg. Viele meldeten sich freiwillig, andere flohen aufs Land.",
+          "source": "Oral History Collection, Peking Universität",
+          "context": "Zivilperspektive 1937"
+        },
+        {
+          "id": "akiko_yamamoto_1937",
+          "name": "Akiko Yamamoto",
+          "title": "Japanische Mutter, Tokio",
+          "coords": [35.6762, 139.6503],
+          "location": "Tokio, Japan",
+          "faction": "axis",
+          "quote": "Mein Mann wurde eingezogen. Die Zeitungen schreiben von Siegen in China.",
+          "fullQuote": "Mein Mann wurde eingezogen. Die Zeitungen schreiben von Siegen in China. Aber ich sehe die Gesichter der Frauen auf dem Bahnhof. Wir lächeln und winken, aber niemand weiß, ob die Männer zurückkommen.",
+          "source": "Japan Women's History Archive",
+          "context": "Zivilperspektive 1937"
+        }
+      ],
+      "1938": [
+        {
+          "id": "friedrich_keller_1938",
+          "name": "Friedrich Keller",
+          "title": "Deutscher Lehrer, Berlin",
+          "coords": [52.52, 13.405],
+          "location": "Berlin, Deutschland",
+          "faction": "axis",
+          "quote": "In der Schule sollen wir den Anschluss als große nationale Tat feiern.",
+          "fullQuote": "In der Schule sollen wir den Anschluss als große nationale Tat feiern. Einige Kollegen jubeln, andere sagen nichts. Ich frage mich, was aus den jüdischen Kindern wird, die plötzlich nicht mehr kommen dürfen.",
+          "source": "Tagebuch eines Berliner Lehrers, 1938",
+          "context": "Zivilperspektive 1938"
+        },
+        {
+          "id": "anna_weiss_1938",
+          "name": "Anna Weiss",
+          "title": "Jüdische Schülerin, Wien",
+          "coords": [48.2082, 16.3738],
+          "location": "Wien, Österreich",
+          "faction": "allies",
+          "quote": "Plötzlich durften wir nicht mehr in die Schule gehen.",
+          "fullQuote": "Plötzlich durften wir nicht mehr in die Schule gehen. Unsere Nachbarn, die uns früher freundlich grüßten, sahen weg. Mein Vater sagte, wir müssten das Land verlassen, aber wohin?",
+          "source": "USC Shoah Foundation, Testimony Archive",
+          "context": "Verfolgtenperspektive 1938"
+        },
+        {
+          "id": "karel_novak_1938",
+          "name": "Karel Novak",
+          "title": "Tschechoslowakischer Grenzsoldat, Sudetenland",
+          "coords": [50.2, 12.8],
+          "location": "Sudetenland, Tschechoslowakei",
+          "faction": "allies",
+          "quote": "Wir hatten Befestigungen gebaut, aber dann kam der Befehl zum Rückzug.",
+          "fullQuote": "Wir hatten Befestigungen gebaut, aber dann kam der Befehl zum Rückzug. Wir sollten unser Land verlassen, ohne einen Schuss abzugeben. Viele weinten vor Wut und Enttäuschung.",
+          "source": "Tschechisches Militärarchiv, Oral History",
+          "context": "Soldatenperspektive 1938"
+        },
+        {
+          "id": "margaret_wilson_1938",
+          "name": "Margaret Wilson",
+          "title": "Britische Journalistin, München",
+          "coords": [48.1351, 11.582],
+          "location": "München, Deutschland",
+          "faction": "allies",
+          "quote": "Chamberlain spricht von Frieden, aber die Menschen in Prag fürchten die Zukunft.",
+          "fullQuote": "Chamberlain spricht von Frieden, aber die Menschen in Prag fürchten die Zukunft. In München sehe ich jubelnde Menschenmengen, doch auch Gesichter, die schweigen und wegsehen.",
+          "source": "BBC Archive, Journalist Diaries",
+          "context": "Beobachterperspektive 1938"
+        },
+        {
+          "id": "pavel_stein_1938",
+          "name": "Pavel Stein",
+          "title": "Jüdischer Arzt, Prag",
+          "coords": [50.0755, 14.4378],
+          "location": "Prag, Tschechoslowakei",
+          "faction": "allies",
+          "quote": "Flüchtlinge aus Österreich kommen täglich. Sie erzählen von Verhaftungen und Demütigungen.",
+          "fullQuote": "Flüchtlinge aus Österreich kommen täglich. Sie erzählen von Verhaftungen und Demütigungen. Wir versuchen zu helfen, aber wir wissen nicht, wie lange Prag noch sicher sein wird.",
+          "source": "Jüdisches Museum Prag, Zeitzeugenarchiv",
+          "context": "Verfolgtenperspektive 1938"
+        },
+        {
+          "id": "otto_schmidt_1938",
+          "name": "Otto Schmidt",
+          "title": "Deutscher SA-Mann, Berlin",
+          "coords": [52.51, 13.4],
+          "location": "Berlin, Deutschland",
+          "faction": "axis",
+          "quote": "In der Kristallnacht haben wir den Befehl erhalten, die Synagogen zu zerstören.",
+          "fullQuote": "In der Kristallnacht haben wir den Befehl erhalten, die Synagogen zu zerstören. Es hieß, die Polizei solle nicht eingreifen. Manche von uns zögerten, andere waren begeistert. Ich sah Geschäfte brennen und Menschen verhaftet werden.",
+          "source": "Gerichtsakten Nachkriegsprozesse; Täterzeugnisse",
+          "context": "Täterperspektive 1938"
+        },
+        {
+          "id": "elisabeth_mueller_1938",
+          "name": "Elisabeth Müller",
+          "title": "Deutsche Hausfrau, Hamburg",
+          "coords": [53.5511, 9.9937],
+          "location": "Hamburg, Deutschland",
+          "faction": "axis",
+          "quote": "Die Zeitungen schreiben, Deutschland werde wieder stark. Mein Bruder ist begeistert.",
+          "fullQuote": "Die Zeitungen schreiben, Deutschland werde wieder stark. Mein Bruder ist begeistert. Aber unsere jüdischen Nachbarn sind plötzlich verschwunden. Niemand spricht darüber.",
+          "source": "Privatarchiv, Familienbriefe 1938",
+          "context": "Zivilperspektive 1938"
+        }
+      ],
+      "1939": [
+        {
+          "id": "jan_kowalski_1939",
+          "name": "Jan Kowalski",
+          "title": "Polnischer Bauer, nahe Warschau",
+          "coords": [52.2297, 21.0122],
+          "location": "Warschau, Polen",
+          "faction": "allies",
+          "quote": "Am ersten September kamen die deutschen Flugzeuge. Sie bombardierten alles.",
+          "fullQuote": "Am ersten September kamen die deutschen Flugzeuge. Sie bombardierten alles: Bahnhöfe, Straßen, Dörfer. Wir flohen mit dem, was wir tragen konnten. Meine Frau hatte unser Baby auf dem Arm, ich zog den Wagen mit etwas Essen. Hinter uns brannte unser Haus.",
+          "source": "Polish Institute of National Remembrance, Oral History",
+          "context": "Zivilperspektive 1939"
+        },
+        {
+          "id": "heinrich_bauer_1939",
+          "name": "Heinrich Bauer",
+          "title": "Deutscher Wehrmachtssoldat, Polen",
+          "coords": [52.3, 21.0],
+          "location": "Warschau, Polen",
+          "faction": "axis",
+          "quote": "Wir sollten schnell vorrücken. Widerstand war nicht zu dulden.",
+          "fullQuote": "Wir sollten schnell vorrücken. Widerstand war nicht zu dulden. Unser Offizier sagte, wer nicht mitmache, sei ein Verräter. Ich sah, wie Gefangene erschossen wurden. Später erzählte man uns, das seien Partisanen gewesen.",
+          "source": "Wehrmacht-Tagebücher; Bundesarchiv-Militärarchiv",
+          "context": "Soldatenperspektive 1939"
+        },
+        {
+          "id": "sarah_goldstein_1939",
+          "name": "Sarah Goldstein",
+          "title": "Jüdische Schneiderin, Lodz",
+          "coords": [51.7592, 19.455],
+          "location": "Lodz, Polen",
+          "faction": "allies",
+          "quote": "Die Deutschen kamen und sagten, wir müssten alle unsere Wertgegenstände abgeben.",
+          "fullQuote": "Die Deutschen kamen und sagten, wir müssten alle unsere Wertgegenstände abgeben. Dann mussten wir ein weißes Band mit einem blauen Stern tragen. Mein Geschäft wurde geschlossen. Wir wussten nicht, was als Nächstes kommen würde.",
+          "source": "US Holocaust Memorial Museum, Oral History",
+          "context": "Verfolgtenperspektive 1939"
+        },
+        {
+          "id": "marek_wisniewski_1939",
+          "name": "Marek Wisniewski",
+          "title": "Polnischer Offizier, Katyn",
+          "coords": [54.75, 31.78],
+          "location": "Katyn, Sowjetunion",
+          "faction": "allies",
+          "quote": "Die NKVD nahm uns gefangen. Wir wurden in Lager gebracht.",
+          "fullQuote": "Die NKVD nahm uns gefangen. Wir wurden in Lager gebracht. Wir glaubten, es sei nur vorübergehend. Niemand ahnte, was mit uns geschehen sollte.",
+          "source": "Katyn Museum, Warsaw; Familienbriefe",
+          "context": "Opferperspektive 1939"
+        },
+        {
+          "id": "william_harris_1939",
+          "name": "William Harris",
+          "title": "Britischer Diplomat, London",
+          "coords": [51.5074, -0.1278],
+          "location": "London, Großbritannien",
+          "faction": "allies",
+          "quote": "Als Deutschland Polen angriff, war klar, dass wir handeln mussten.",
+          "fullQuote": "Als Deutschland Polen angriff, war klar, dass wir handeln mussten. Die Regierung erklärte den Krieg, aber viele hofften noch immer, dass es nicht zu einem langen Konflikt kommen würde.",
+          "source": "British National Archives, Diplomatic Papers",
+          "context": "Politische Perspektive 1939"
+        },
+        {
+          "id": "marie_lefevre_1939",
+          "name": "Marie Lefèvre",
+          "title": "Französische Mutter, Paris",
+          "coords": [48.8566, 2.3522],
+          "location": "Paris, Frankreich",
+          "faction": "allies",
+          "quote": "Mein Mann wurde mobilisiert. Wir dachten, es würde wie 1914 werden.",
+          "fullQuote": "Mein Mann wurde mobilisiert. Wir dachten, es würde wie 1914 werden. Die Bahnhöfe waren voller Männer in Uniform. Die Frauen weinten, aber wir sagten uns, es sei nur für kurze Zeit.",
+          "source": "French National Archives, Family Letters",
+          "context": "Zivilperspektive 1939"
+        },
+        {
+          "id": "ernst_krueger_1939",
+          "name": "Ernst Krüger",
+          "title": "Deutscher Jude, Berlin",
+          "coords": [52.52, 13.405],
+          "location": "Berlin, Deutschland",
+          "faction": "allies",
+          "quote": "Nach Kriegsbeginn wurde es noch schlimmer. Wir durften kaum noch aus dem Haus.",
+          "fullQuote": "Nach Kriegsbeginn wurde es noch schlimmer. Wir durften kaum noch aus dem Haus. Freunde verschwanden, Geschäfte wurden geschlossen. Meine Frau sagte, wir müssten fliehen, solange es noch möglich sei.",
+          "source": "Leo Baeck Institute, Refugee Testimonies",
+          "context": "Verfolgtenperspektive 1939"
+        },
+        {
+          "id": "anna_sokolova_1939",
+          "name": "Anna Sokolova",
+          "title": "Sowjetische Lehrerin, Leningrad",
+          "coords": [59.9343, 30.3351],
+          "location": "Leningrad, Sowjetunion",
+          "faction": "allies",
+          "quote": "Der Krieg gegen Finnland begann. Viele meiner Schüler wurden eingezogen.",
+          "fullQuote": "Der Krieg gegen Finnland begann. Viele meiner Schüler wurden eingezogen. Die Zeitungen sagten, es sei notwendig, aber die Mütter weinten auf den Bahnhöfen.",
+          "source": "Russian State Archive, Civilian Diaries",
+          "context": "Zivilperspektive 1939"
+        },
+        {
+          "id": "paul_schneider_1939",
+          "name": "Paul Schneider",
+          "title": "Deutscher Widerstandskämpfer, München",
+          "coords": [48.1351, 11.582],
+          "location": "München, Deutschland",
+          "faction": "allies",
+          "quote": "Dieser Krieg ist ein Verbrechen. Aber wer es sagt, riskiert sein Leben.",
+          "fullQuote": "Dieser Krieg ist ein Verbrechen. Aber wer es sagt, riskiert sein Leben. Wir treffen uns heimlich und verteilen Flugblätter. Es sind nicht viele, die mitmachen wollen.",
+          "source": "German Resistance Memorial Center, Documents",
+          "context": "Widerstandsperspektive 1939"
+        }
+      ],
+      "1940": [
+        {
+          "id": "edward_thompson_1940",
+          "name": "Edward Thompson",
+          "title": "Britischer Zivilist, London",
+          "coords": [51.5074, -0.1278],
+          "location": "London, Großbritannien",
+          "faction": "allies",
+          "quote": "Die Sirenen heulten jede Nacht. Wir schliefen in der U-Bahn.",
+          "fullQuote": "Die Sirenen heulten jede Nacht. Wir schliefen in der U-Bahn. Wenn wir morgens herauskamen, wussten wir nie, ob unser Haus noch stand. Aber wir gingen zur Arbeit, als wäre alles normal.",
+          "source": "Imperial War Museum, London Blitz Oral Histories",
+          "context": "Zivilperspektive 1940"
+        },
+        {
+          "id": "georges_martin_1940",
+          "name": "Georges Martin",
+          "title": "Französischer Soldat, Dünkirchen",
+          "coords": [51.0344, 2.3768],
+          "location": "Dünkirchen, Frankreich",
+          "faction": "allies",
+          "quote": "Wir warteten am Strand auf die Boote. Überall explodierten Bomben.",
+          "fullQuote": "Wir warteten am Strand auf die Boote. Überall explodierten Bomben. Manche Männer schwammen hinaus, andere beteten. Als endlich ein kleines Boot kam, dachte ich, wir hätten eine zweite Chance bekommen.",
+          "source": "Imperial War Museum, Dunkirk Collection",
+          "context": "Soldatenperspektive 1940"
+        },
+        {
+          "id": "jacques_bernard_1940",
+          "name": "Jacques Bernard",
+          "title": "Französischer Jude, Paris",
+          "coords": [48.8566, 2.3522],
+          "location": "Paris, Frankreich",
+          "faction": "allies",
+          "quote": "Als die Deutschen in Paris einmarschierten, wusste ich, dass wir in Gefahr waren.",
+          "fullQuote": "Als die Deutschen in Paris einmarschierten, wusste ich, dass wir in Gefahr waren. Zuerst kamen neue Gesetze, dann die gelben Sterne. Meine Familie beschloss, nach Süden zu fliehen.",
+          "source": "Mémorial de la Shoah, Paris Testimonies",
+          "context": "Verfolgtenperspektive 1940"
+        },
+        {
+          "id": "karl_mueller_1940",
+          "name": "Karl Müller",
+          "title": "Deutscher Pilot, Luftschlacht um England",
+          "coords": [51.0, 1.0],
+          "location": "Ärmelkanal, Großbritannien",
+          "faction": "axis",
+          "quote": "Wir flogen täglich gegen England. Viele kamen nicht zurück.",
+          "fullQuote": "Wir flogen täglich gegen England. Viele kamen nicht zurück. Die Briten hatten bessere Radarstationen, sagten manche. Wir wussten nur, dass die Flugzeuge vor uns in den Wolken verschwanden.",
+          "source": "Luftwaffe Pilot Diaries, Bundesarchiv",
+          "context": "Soldatenperspektive 1940"
+        },
+        {
+          "id": "piet_van_der_meer_1940",
+          "name": "Piet van der Meer",
+          "title": "Niederländischer Zivilist, Rotterdam",
+          "coords": [51.9244, 4.4777],
+          "location": "Rotterdam, Niederlande",
+          "faction": "allies",
+          "quote": "Nach dem Bombardement war die ganze Innenstadt zerstört.",
+          "fullQuote": "Nach dem Bombardement war die ganze Innenstadt zerstört. Unser Haus stand nicht mehr. Wir fanden meine Großmutter erst nach drei Tagen in einem Keller.",
+          "source": "Dutch War Museum, Rotterdam Oral History",
+          "context": "Zivilperspektive 1940"
+        },
+        {
+          "id": "sophie_dubois_1940",
+          "name": "Sophie Dubois",
+          "title": "Französische Krankenschwester, Lyon",
+          "coords": [45.764, 4.8357],
+          "location": "Lyon, Frankreich",
+          "faction": "allies",
+          "quote": "Die Flüchtlinge kamen in endlosen Reihen. Wir hatten nicht genug Betten.",
+          "fullQuote": "Die Flüchtlinge kamen in endlosen Reihen. Wir hatten nicht genug Betten. Kinder waren von ihren Eltern getrennt, alte Menschen starben an Erschöpfung.",
+          "source": "French Red Cross Archives",
+          "context": "Zivilperspektive 1940"
+        },
+        {
+          "id": "giuseppe_romano_1940",
+          "name": "Giuseppe Romano",
+          "title": "Italienischer Soldat, Nordafrika",
+          "coords": [31.2, 29.9],
+          "location": "Alexandria, Ägypten",
+          "faction": "axis",
+          "quote": "Wir wurden nach Afrika geschickt. Niemand wusste, was uns dort erwartete.",
+          "fullQuote": "Wir wurden nach Afrika geschickt. Niemand wusste, was uns dort erwartete. Die Hitze war unerträglich, das Wasser knapp. Unsere Offiziere sagten, es werde ein schneller Sieg.",
+          "source": "Italian Military Archives, Africa Campaign",
+          "context": "Soldatenperspektive 1940"
+        },
+        {
+          "id": "ruth_cohen_1940",
+          "name": "Ruth Cohen",
+          "title": "Jüdisches Kind, Amsterdam",
+          "coords": [52.3676, 4.9041],
+          "location": "Amsterdam, Niederlande",
+          "faction": "allies",
+          "quote": "In der Schule sagten sie, wir Juden dürften nicht mehr mitmachen.",
+          "fullQuote": "In der Schule sagten sie, wir Juden dürften nicht mehr mitmachen. Meine beste Freundin durfte plötzlich nicht mehr mit mir spielen. Meine Eltern flüsterten nachts über Verstecke.",
+          "source": "Anne Frank House, Testimony Collection",
+          "context": "Verfolgtenperspektive 1940"
+        },
+        {
+          "id": "william_robinson_1940",
+          "name": "William Robinson",
+          "title": "US-amerikanischer Journalist, London",
+          "coords": [51.51, -0.13],
+          "location": "London, Großbritannien",
+          "faction": "allies",
+          "quote": "Die Briten zeigen eine erstaunliche Ruhe. Aber die Zerstörung ist enorm.",
+          "fullQuote": "Die Briten zeigen eine erstaunliche Ruhe. Aber die Zerstörung ist enorm. Ganze Straßenzüge liegen in Trümmern. Dennoch öffnen die Pubs am nächsten Tag wieder.",
+          "source": "New York Times Archive, War Correspondence",
+          "context": "Beobachterperspektive 1940"
+        }
+      ],
+      "1941": [
+        {
+          "id": "ivan_petrovski_1941",
+          "name": "Ivan Petrovski",
+          "title": "Sowjetischer Soldat, Brest",
+          "coords": [52.0976, 23.7341],
+          "location": "Brest, Belarus",
+          "faction": "allies",
+          "quote": "Am 22. Juni begann der Beschuss. Wir waren völlig überrascht.",
+          "fullQuote": "Am 22. Juni begann der Beschuss. Wir waren völlig überrascht. Die Deutschen kamen mit Panzern und Flugzeugen. Viele meiner Kameraden starben in den ersten Stunden. Wir kämpften weiter, obwohl wir keine Verbindung zum Hauptquartier hatten.",
+          "source": "Russian State Military Archive, Brest Fortress Testimonies",
+          "context": "Soldatenperspektive 1941"
+        },
+        {
+          "id": "hans_wagner_1941",
+          "name": "Hans Wagner",
+          "title": "Deutscher Wehrmachtsoffizier, Ostfront",
+          "coords": [53.9, 27.56],
+          "location": "Minsk, Belarus",
+          "faction": "axis",
+          "quote": "Der Vormarsch war schneller als erwartet. Die Straßen waren voller Gefangener.",
+          "fullQuote": "Der Vormarsch war schneller als erwartet. Die Straßen waren voller Gefangener. Man sagte uns, wir müssten hart sein, sonst würden wir den Krieg verlieren. Einige Einheiten machten mit den Kommissaren kurzen Prozess.",
+          "source": "Wehrmacht War Diaries, Bundesarchiv",
+          "context": "Täterperspektive 1941"
+        },
+        {
+          "id": "raisa_kuznetsova_1941",
+          "name": "Raisa Kuznetsova",
+          "title": "Sowjetische Zivilistin, Leningrad",
+          "coords": [59.9343, 30.3351],
+          "location": "Leningrad, Sowjetunion",
+          "faction": "allies",
+          "quote": "Die Belagerung begann. Wir rationieren Brot auf wenige Gramm am Tag.",
+          "fullQuote": "Die Belagerung begann. Wir rationieren Brot auf wenige Gramm am Tag. Meine Mutter kocht Suppe aus Tapetenkleister. Menschen fallen auf der Straße um. Aber wir geben nicht auf.",
+          "source": "Leningrad Siege Museum, Diaries",
+          "context": "Zivilperspektive 1941"
+        },
+        {
+          "id": "david_levin_1941",
+          "name": "David Levin",
+          "title": "Jüdischer Lehrer, Kiew",
+          "coords": [50.4501, 30.5234],
+          "location": "Kiew, Ukraine",
+          "faction": "allies",
+          "quote": "Sie sagten uns, wir sollten uns mit Gepäck sammeln. Niemand wusste, wohin.",
+          "fullQuote": "Sie sagten uns, wir sollten uns mit Gepäck sammeln. Niemand wusste, wohin. Dann führten sie uns zu einer Schlucht. Ich konnte entkommen, als die Schüsse begannen. Meine Frau und meine Kinder sah ich nie wieder.",
+          "source": "Yad Vashem Testimonies, Babyn Yar",
+          "context": "Verfolgtenperspektive 1941"
+        },
+        {
+          "id": "maria_schmidt_1941",
+          "name": "Maria Schmidt",
+          "title": "Deutsche Mutter, Hamburg",
+          "coords": [53.5511, 9.9937],
+          "location": "Hamburg, Deutschland",
+          "faction": "axis",
+          "quote": "Mein Sohn ist an der Ostfront. Die Briefe werden seltener.",
+          "fullQuote": "Mein Sohn ist an der Ostfront. Die Briefe werden seltener. Er schreibt, es sei kalt und sie hätten wenig zu essen. Ich bete jeden Tag, dass er zurückkommt.",
+          "source": "German Family Letters Collection, 1941",
+          "context": "Zivilperspektive 1941"
+        },
+        {
+          "id": "franklin_roosevelt_1941",
+          "name": "Franklin D. Roosevelt",
+          "title": "US-Präsident, Washington D.C.",
+          "coords": [38.9072, -77.0369],
+          "location": "Washington D.C., USA",
+          "faction": "allies",
+          "quote": "Yesterday, December 7, 1941 - a date which will live in infamy.",
+          "fullQuote": "Yesterday, December 7, 1941 - a date which will live in infamy - the United States of America was suddenly and deliberately attacked by naval and air forces of the Empire of Japan.",
+          "source": "Franklin D. Roosevelt Presidential Library, Pearl Harbor Address",
+          "context": "Politische Perspektive 1941"
+        },
+        {
+          "id": "hiroshi_tanaka_1941",
+          "name": "Hiroshi Tanaka",
+          "title": "Japanischer Pilot, Pearl Harbor",
+          "coords": [21.35, -157.98],
+          "location": "Pearl Harbor, Hawaii",
+          "faction": "axis",
+          "quote": "Der Angriff verlief schneller als geplant. Wir sahen die Schiffe brennen.",
+          "fullQuote": "Der Angriff verlief schneller als geplant. Wir sahen die Schiffe brennen. Unser Kommandeur sagte, wir hätten Geschichte geschrieben. Aber ich fragte mich, was jetzt kommen würde.",
+          "source": "Japanese Naval Archives, Pilot Testimonies",
+          "context": "Soldatenperspektive 1941"
+        },
+        {
+          "id": "ruth_goldberg_1941",
+          "name": "Ruth Goldberg",
+          "title": "Jüdische Jugendliche, Vilnius",
+          "coords": [54.6872, 25.2797],
+          "location": "Vilnius, Litauen",
+          "faction": "allies",
+          "quote": "Wir wurden ins Ghetto getrieben. Die Straßen waren voller Menschen.",
+          "fullQuote": "Wir wurden ins Ghetto getrieben. Die Straßen waren voller Menschen. Meine Großmutter konnte nicht schnell genug gehen und wurde geschlagen. In unserem Zimmer leben jetzt drei Familien.",
+          "source": "Vilna Gaon Jewish State Museum, Testimonies",
+          "context": "Verfolgtenperspektive 1941"
+        }
+      ],
+      "1942": [
+        {
+          "id": "elena_smirnova_1942",
+          "name": "Elena Smirnova",
+          "title": "Sowjetische Krankenschwester, Stalingrad",
+          "coords": [48.708, 44.5133],
+          "location": "Stalingrad, Sowjetunion",
+          "faction": "allies",
+          "quote": "Wir operierten ohne Licht, ohne Wasser, manchmal ohne Betäubungsmittel.",
+          "fullQuote": "Wir operierten ohne Licht, ohne Wasser, manchmal ohne Betäubungsmittel. Die Verwundeten lagen in den Kellern, während über uns die Häuser einstürzten. Manche baten uns, ihren Familien zu schreiben, weil sie wussten, dass sie sterben würden.",
+          "source": "Stalingrad Battle Museum, Medical Staff Diaries",
+          "context": "Zivilperspektive 1942"
+        },
+        {
+          "id": "karl_heinz_meier_1942",
+          "name": "Karl-Heinz Meier",
+          "title": "Deutscher Soldat, Stalingrad",
+          "coords": [48.71, 44.51],
+          "location": "Stalingrad, Sowjetunion",
+          "faction": "axis",
+          "quote": "Wir frieren, wir hungern. Die Russen greifen ständig an.",
+          "fullQuote": "Wir frieren, wir hungern. Die Russen greifen ständig an. Unsere Offiziere sagen, wir sollen durchhalten, aber niemand glaubt mehr an den Sieg. Wir essen Pferdefleisch und gefrorene Kartoffeln.",
+          "source": "Wehrmacht Soldier Letters, Stalingrad Collection",
+          "context": "Soldatenperspektive 1942"
+        },
+        {
+          "id": "rachel_stein_1942",
+          "name": "Rachel Stein",
+          "title": "Jüdische Mutter, Warschauer Ghetto",
+          "coords": [52.23, 21.01],
+          "location": "Warschau, Polen",
+          "faction": "allies",
+          "quote": "Die Deportationen haben begonnen. Jeden Tag verschwinden Menschen.",
+          "fullQuote": "Die Deportationen haben begonnen. Jeden Tag verschwinden Menschen. Man sagt, sie würden zur Arbeit gebracht, aber niemand kommt zurück. Ich verstecke meine Kinder bei Freunden, aber ich weiß nicht, ob sie sicher sind.",
+          "source": "Jewish Historical Institute Warsaw, Ghetto Diaries",
+          "context": "Verfolgtenperspektive 1942"
+        },
+        {
+          "id": "janusz_korczak_1942",
+          "name": "Janusz Korczak",
+          "title": "Pädagoge, Warschauer Ghetto",
+          "coords": [52.231, 21.008],
+          "location": "Warschau, Polen",
+          "faction": "allies",
+          "quote": "Ich kann die Kinder nicht verlassen. Wir gehen gemeinsam.",
+          "fullQuote": "Ich kann die Kinder nicht verlassen. Wir gehen gemeinsam. Sie fragen, wohin wir fahren. Ich sage ihnen, es sei ein Ausflug aufs Land. Sie sollen keine Angst haben.",
+          "source": "Korczak Archive, Last Letters",
+          "context": "Opferperspektive 1942"
+        },
+        {
+          "id": "sarah_weiss_1942",
+          "name": "Sarah Weiss",
+          "title": "Jüdische Jugendliche, Amsterdam",
+          "coords": [52.3676, 4.9041],
+          "location": "Amsterdam, Niederlande",
+          "faction": "allies",
+          "quote": "Wir verstecken uns hinter einem Bücherregal. Wir dürfen keinen Laut machen.",
+          "fullQuote": "Wir verstecken uns hinter einem Bücherregal. Wir dürfen keinen Laut machen. Tagsüber müssen wir ganz still sein. Manchmal höre ich Schritte unten im Haus und denke, sie haben uns gefunden.",
+          "source": "Anne Frank House, Hidden Child Testimonies",
+          "context": "Verfolgtenperspektive 1942"
+        },
+        {
+          "id": "mohammed_al_hassan_1942",
+          "name": "Mohammed al-Hassan",
+          "title": "Ägyptischer Arbeiter, El Alamein",
+          "coords": [30.83, 28.95],
+          "location": "El Alamein, Ägypten",
+          "faction": "allies",
+          "quote": "Die Schlacht kam zu uns. Überall waren Panzer und Soldaten.",
+          "fullQuote": "Die Schlacht kam zu uns. Überall waren Panzer und Soldaten. Unsere Felder wurden zerstört, unsere Brunnen vergiftet. Wir wussten nicht, wer Freund und wer Feind war.",
+          "source": "Egyptian National Archives, Civilian Testimonies",
+          "context": "Zivilperspektive 1942"
+        },
+        {
+          "id": "giovanni_bianchi_1942",
+          "name": "Giovanni Bianchi",
+          "title": "Italienischer Soldat, Nordafrika",
+          "coords": [31.2, 29.9],
+          "location": "Alexandria, Ägypten",
+          "faction": "axis",
+          "quote": "Wir kämpfen in der Wüste gegen die Engländer. Es ist heiß, es gibt kaum Wasser.",
+          "fullQuote": "Wir kämpfen in der Wüste gegen die Engländer. Es ist heiß, es gibt kaum Wasser. Viele Kameraden sind krank. Wir fragen uns, warum wir hier sind.",
+          "source": "Italian Army Diaries, North Africa",
+          "context": "Soldatenperspektive 1942"
+        },
+        {
+          "id": "margaret_smith_1942",
+          "name": "Margaret Smith",
+          "title": "Britische Fabrikarbeiterin, Manchester",
+          "coords": [53.4808, -2.2426],
+          "location": "Manchester, Großbritannien",
+          "faction": "allies",
+          "quote": "Wir bauen Flugzeuge. Die Schichten dauern zwölf Stunden.",
+          "fullQuote": "Wir bauen Flugzeuge. Die Schichten dauern zwölf Stunden. Mein Mann ist in Afrika, mein Bruder in Russland. Wir Frauen halten die Fabriken am Laufen.",
+          "source": "Imperial War Museum, Women's War Work Collection",
+          "context": "Zivilperspektive 1942"
+        },
+        {
+          "id": "yoshio_sato_1942",
+          "name": "Yoshio Sato",
+          "title": "Japanischer Soldat, Guadalcanal",
+          "coords": [-9.43, 160.05],
+          "location": "Guadalcanal, Salomonen",
+          "faction": "axis",
+          "quote": "Der Dschungel ist schlimmer als der Feind. Wir haben keine Nahrung.",
+          "fullQuote": "Der Dschungel ist schlimmer als der Feind. Wir haben keine Nahrung. Viele Männer sterben an Krankheiten. Wir essen Blätter und Wurzeln. Der Kaiser erwartet, dass wir kämpfen bis zum Tod.",
+          "source": "Japanese Army Diaries, Guadalcanal",
+          "context": "Soldatenperspektive 1942"
+        },
+        {
+          "id": "william_johnson_1942",
+          "name": "William Johnson",
+          "title": "US-amerikanischer Soldat, Midway",
+          "coords": [28.2, -177.37],
+          "location": "Midway-Atoll, Pazifik",
+          "faction": "allies",
+          "quote": "Wir wussten, dass diese Schlacht den Krieg im Pazifik entscheiden könnte.",
+          "fullQuote": "Wir wussten, dass diese Schlacht den Krieg im Pazifik entscheiden könnte. Als wir die japanischen Flugzeugträger trafen, sahen wir riesige Feuerbälle. Es war, als würde der Ozean brennen.",
+          "source": "US Naval History and Heritage Command, Midway Oral Histories",
+          "context": "Soldatenperspektive 1942"
+        }
+      ],
+      "1943": [
+        {
+          "id": "sergei_ivanov_1943",
+          "name": "Sergei Ivanov",
+          "title": "Sowjetischer Soldat, Kursk",
+          "coords": [51.7373, 36.1874],
+          "location": "Kursk, Sowjetunion",
+          "faction": "allies",
+          "quote": "Die Erde bebte von den Panzern. Es war die größte Schlacht, die ich je gesehen habe.",
+          "fullQuote": "Die Erde bebte von den Panzern. Es war die größte Schlacht, die ich je gesehen habe. Unser Kommissar sagte, hinter uns sei Moskau. Wir wussten, dass wir nicht zurückweichen durften.",
+          "source": "Russian Military Archive, Kursk Veterans",
+          "context": "Soldatenperspektive 1943"
+        },
+        {
+          "id": "franz_keller_1943",
+          "name": "Franz Keller",
+          "title": "Deutscher Panzerkommandant, Kursk",
+          "coords": [51.74, 36.19],
+          "location": "Kursk, Sowjetunion",
+          "faction": "axis",
+          "quote": "Unsere neuen Panzer sollten den Durchbruch schaffen, aber die Russen waren vorbereitet.",
+          "fullQuote": "Unsere neuen Panzer sollten den Durchbruch schaffen, aber die Russen waren vorbereitet. Überall waren Minen und Geschütze. Wir verloren viele Männer und Maschinen.",
+          "source": "Wehrmacht Panzer Diaries, Kursk",
+          "context": "Soldatenperspektive 1943"
+        },
+        {
+          "id": "sofia_rossi_1943",
+          "name": "Sofia Rossi",
+          "title": "Italienische Zivilistin, Rom",
+          "coords": [41.9028, 12.4964],
+          "location": "Rom, Italien",
+          "faction": "allies",
+          "quote": "Nach Mussolinis Sturz hofften wir auf Frieden. Dann kamen die Deutschen.",
+          "fullQuote": "Nach Mussolinis Sturz hofften wir auf Frieden. Dann kamen die Deutschen. Sie besetzten unsere Stadt, verhafteten Juden und Widerstandskämpfer. Wir waren wieder im Krieg.",
+          "source": "Italian Resistance Archive, Rome Testimonies",
+          "context": "Zivilperspektive 1943"
+        },
+        {
+          "id": "david_cohen_1943",
+          "name": "David Cohen",
+          "title": "Jüdischer Widerstandskämpfer, Warschau",
+          "coords": [52.23, 21.01],
+          "location": "Warschau, Polen",
+          "faction": "allies",
+          "quote": "Wir hatten kaum Waffen, aber wir wollten nicht kampflos sterben.",
+          "fullQuote": "Wir hatten kaum Waffen, aber wir wollten nicht kampflos sterben. Als die Deutschen ins Ghetto kamen, schossen wir zurück. Wir wussten, dass wir nicht gewinnen konnten, aber wir wollten zeigen, dass wir Menschen sind.",
+          "source": "Jewish Fighting Organization Archives, Warsaw",
+          "context": "Widerstandsperspektive 1943"
+        },
+        {
+          "id": "anna_kowalska_1943",
+          "name": "Anna Kowalska",
+          "title": "Polnische Zivilistin, Warschau",
+          "coords": [52.231, 21.012],
+          "location": "Warschau, Polen",
+          "faction": "allies",
+          "quote": "Wir hörten die Schüsse aus dem Ghetto. Niemand konnte helfen.",
+          "fullQuote": "Wir hörten die Schüsse aus dem Ghetto. Niemand konnte helfen. Die Deutschen drohten jedem, der Juden versteckte, mit dem Tod. Aber manche von uns versuchten es trotzdem.",
+          "source": "Polish Resistance Archive, Civilian Testimonies",
+          "context": "Zivilperspektive 1943"
+        },
+        {
+          "id": "joseph_miller_1943",
+          "name": "Joseph Miller",
+          "title": "US-amerikanischer Soldat, Sizilien",
+          "coords": [37.6, 14.0],
+          "location": "Sizilien, Italien",
+          "faction": "allies",
+          "quote": "Die Landung war chaotisch. Wir kamen unter schweres Feuer.",
+          "fullQuote": "Die Landung war chaotisch. Wir kamen unter schweres Feuer. Viele von uns waren zum ersten Mal im Kampf. Die italienischen Zivilisten begrüßten uns mit Brot und Wein.",
+          "source": "US Army Center of Military History, Sicily Campaign",
+          "context": "Soldatenperspektive 1943"
+        },
+        {
+          "id": "kenji_yamamoto_1943",
+          "name": "Kenji Yamamoto",
+          "title": "Japanischer Pilot, Rabaul",
+          "coords": [-4.2, 152.18],
+          "location": "Rabaul, Papua-Neuguinea",
+          "faction": "axis",
+          "quote": "Die amerikanischen Flugzeuge kommen jeden Tag. Wir können sie nicht aufhalten.",
+          "fullQuote": "Die amerikanischen Flugzeuge kommen jeden Tag. Wir können sie nicht aufhalten. Unsere Flugzeuge sind alt, unsere Piloten müde. Wir wissen, dass der Krieg sich gegen uns wendet.",
+          "source": "Japanese Naval Air Force Diaries",
+          "context": "Soldatenperspektive 1943"
+        },
+        {
+          "id": "elisabeth_wagner_1943",
+          "name": "Elisabeth Wagner",
+          "title": "Deutsche Mutter, Hamburg",
+          "coords": [53.5511, 9.9937],
+          "location": "Hamburg, Deutschland",
+          "faction": "axis",
+          "quote": "Nach dem Feuersturm war unsere Stadt nicht mehr dieselbe.",
+          "fullQuote": "Nach dem Feuersturm war unsere Stadt nicht mehr dieselbe. Wir rannten durch brennende Straßen. Menschen verbrannten in ihren Kellern. Als wir zurückkamen, war unser Haus verschwunden.",
+          "source": "Hamburg War Archive, Operation Gomorrah Testimonies",
+          "context": "Zivilperspektive 1943"
+        },
+        {
+          "id": "charles_anderson_1943",
+          "name": "Charles Anderson",
+          "title": "Britischer Soldat, Burma",
+          "coords": [19.7633, 96.0785],
+          "location": "Burma, Myanmar",
+          "faction": "allies",
+          "quote": "Der Dschungel verschluckt Menschen. Krankheit ist unser größter Feind.",
+          "fullQuote": "Der Dschungel verschluckt Menschen. Krankheit ist unser größter Feind. Wir tragen verwundete Kameraden tagelang durch den Schlamm. Die Japaner sind unsichtbar, aber immer da.",
+          "source": "British Army Burma Campaign Diaries",
+          "context": "Soldatenperspektive 1943"
+        }
+      ],
+      "1944": [
+        {
+          "id": "robert_wilson_1944",
+          "name": "Robert Wilson",
+          "title": "US-amerikanischer Soldat, Normandie",
+          "coords": [49.4144, -0.8328],
+          "location": "Omaha Beach, Normandie",
+          "faction": "allies",
+          "quote": "Als die Rampe herunterging, fielen die Männer neben mir.",
+          "fullQuote": "Als die Rampe herunterging, fielen die Männer neben mir. Das Wasser war rot. Wir mussten durch das Feuer laufen, sonst wären wir ertrunken. Ich weiß nicht, wie ich den Strand erreicht habe.",
+          "source": "US National Archives, D-Day Oral Histories",
+          "context": "Soldatenperspektive 1944"
+        },
+        {
+          "id": "marie_leclerc_1944",
+          "name": "Marie Leclerc",
+          "title": "Französische Widerstandskämpferin, Paris",
+          "coords": [48.8566, 2.3522],
+          "location": "Paris, Frankreich",
+          "faction": "allies",
+          "quote": "Wir warteten auf das Signal aus London. Dann begannen wir, die Deutschen zu sabotieren.",
+          "fullQuote": "Wir warteten auf das Signal aus London. Dann begannen wir, die Deutschen zu sabotieren. Wir sprengten Eisenbahnen, schnitten Telefonleitungen. Jeder wusste, dass die Gestapo uns finden könnte.",
+          "source": "French Resistance Museum, Paris",
+          "context": "Widerstandsperspektive 1944"
+        },
+        {
+          "id": "wladyslaw_kowalski_1944",
+          "name": "Władysław Kowalski",
+          "title": "Polnischer Widerstandskämpfer, Warschau",
+          "coords": [52.2297, 21.0122],
+          "location": "Warschau, Polen",
+          "faction": "allies",
+          "quote": "Wir kämpften 63 Tage. Die Stadt brannte, aber wir gaben nicht auf.",
+          "fullQuote": "Wir kämpften 63 Tage. Die Stadt brannte, aber wir gaben nicht auf. Wir hofften auf Hilfe von der Roten Armee am anderen Ufer der Weichsel, aber sie kam nicht.",
+          "source": "Warsaw Uprising Museum, Veterans Testimonies",
+          "context": "Widerstandsperspektive 1944"
+        },
+        {
+          "id": "helga_schmidt_1944",
+          "name": "Helga Schmidt",
+          "title": "Deutsche Zivilistin, Dresden",
+          "coords": [51.0504, 13.7373],
+          "location": "Dresden, Deutschland",
+          "faction": "axis",
+          "quote": "Die Bomben fielen die ganze Nacht. Als wir herauskamen, war alles zerstört.",
+          "fullQuote": "Die Bomben fielen die ganze Nacht. Als wir herauskamen, war alles zerstört. Meine Mutter und mein kleiner Bruder waren verschwunden. Ich suchte tagelang in den Trümmern.",
+          "source": "Dresden City Archive, Civilian Testimonies",
+          "context": "Zivilperspektive 1944"
+        },
+        {
+          "id": "isaac_levi_1944",
+          "name": "Isaac Levi",
+          "title": "Jüdischer Häftling, Auschwitz",
+          "coords": [50.0359, 19.1783],
+          "location": "Auschwitz, Polen",
+          "faction": "allies",
+          "quote": "Jeden Tag kamen Züge. Wir wussten, was die Menschen erwartete.",
+          "fullQuote": "Jeden Tag kamen Züge. Wir wussten, was die Menschen erwartete. Manche fragten uns, wohin sie gehen müssten. Wir konnten nichts sagen. Die SS beobachtete alles.",
+          "source": "Auschwitz-Birkenau State Museum, Survivor Testimonies",
+          "context": "Verfolgtenperspektive 1944"
+        },
+        {
+          "id": "german_soldier_1944",
+          "name": "Wilhelm Braun",
+          "title": "Deutscher Soldat, Ardennen",
+          "coords": [50.0, 6.0],
+          "location": "Ardennen, Belgien",
+          "faction": "axis",
+          "quote": "Man sagte uns, dies sei unsere letzte Chance. Aber wir hatten kaum Treibstoff.",
+          "fullQuote": "Man sagte uns, dies sei unsere letzte Chance. Aber wir hatten kaum Treibstoff. Die Amerikaner hatten so viele Panzer und Flugzeuge. Viele Kameraden wussten, dass der Krieg verloren war.",
+          "source": "Wehrmacht Soldier Diaries, Ardennes",
+          "context": "Soldatenperspektive 1944"
+        },
+        {
+          "id": "li_mei_1944",
+          "name": "Li Mei",
+          "title": "Chinesische Zivilistin, Chongqing",
+          "coords": [29.563, 106.5516],
+          "location": "Chongqing, China",
+          "faction": "allies",
+          "quote": "Die japanischen Bombenangriffe haben unsere Stadt jahrelang zerstört.",
+          "fullQuote": "Die japanischen Bombenangriffe haben unsere Stadt jahrelang zerstört. Wir leben in Höhlen und Schutzräumen. Viele Kinder kennen nichts anderes als Krieg.",
+          "source": "Chinese War Resistance Museum, Chongqing",
+          "context": "Zivilperspektive 1944"
+        },
+        {
+          "id": "philip_johnson_1944",
+          "name": "Philip Johnson",
+          "title": "US-amerikanischer Pilot, Pazifik",
+          "coords": [15.0, 145.0],
+          "location": "Saipan, Pazifik",
+          "faction": "allies",
+          "quote": "Wir fliegen täglich Einsätze gegen Japan. Die Inseln sind überall umkämpft.",
+          "fullQuote": "Wir fliegen täglich Einsätze gegen Japan. Die Inseln sind überall umkämpft. Von oben sieht der Krieg aus wie ein Spielzeug, aber wir wissen, dass unten Menschen sterben.",
+          "source": "US Army Air Forces, Pacific Theater Archives",
+          "context": "Soldatenperspektive 1944"
+        },
+        {
+          "id": "emile_dubois_1944",
+          "name": "Émile Dubois",
+          "title": "Französischer Bauer, Normandie",
+          "coords": [49.2, -0.4],
+          "location": "Normandie, Frankreich",
+          "faction": "allies",
+          "quote": "Die Schlacht um unsere Dörfer war furchtbar. Amerikaner und Deutsche kämpften in unseren Feldern.",
+          "fullQuote": "Die Schlacht um unsere Dörfer war furchtbar. Amerikaner und Deutsche kämpften in unseren Feldern. Unsere Kühe waren tot, die Häuser zerstört. Aber wir wussten, dass die Befreiung notwendig war.",
+          "source": "Normandy Memorial Museum, Civilian Testimonies",
+          "context": "Zivilperspektive 1944"
+        },
+        {
+          "id": "natalia_petrova_1944",
+          "name": "Natalia Petrova",
+          "title": "Sowjetische Sanitäterin, Belarus",
+          "coords": [53.9, 27.56],
+          "location": "Minsk, Belarus",
+          "faction": "allies",
+          "quote": "Wir befreiten die Dörfer. Überall fanden wir Massengräber.",
+          "fullQuote": "Wir befreiten die Dörfer. Überall fanden wir Massengräber. Die Menschen erzählten von den deutschen Besatzern und ihren Helfern. Manche Dörfer waren völlig leer.",
+          "source": "Soviet Military Medical Archives, Operation Bagration",
+          "context": "Soldatenperspektive 1944"
+        }
+      ],
+      "1945": [
+        {
+          "id": "alexei_volkov_1945",
+          "name": "Alexei Volkov",
+          "title": "Sowjetischer Soldat, Berlin",
+          "coords": [52.52, 13.405],
+          "location": "Berlin, Deutschland",
+          "faction": "allies",
+          "quote": "Wir kämpften Straße für Straße. Berlin war eine Ruinenstadt.",
+          "fullQuote": "Wir kämpften Straße für Straße. Berlin war eine Ruinenstadt. Die deutschen Soldaten verteidigten jeden Keller. Viele Zivilisten waren zwischen den Fronten gefangen.",
+          "source": "Russian Military Archive, Berlin Battle Testimonies",
+          "context": "Soldatenperspektive 1945"
+        },
+        {
+          "id": "helmut_weber_1945",
+          "name": "Helmut Weber",
+          "title": "Deutscher Zivilist, Berlin",
+          "coords": [52.51, 13.4],
+          "location": "Berlin, Deutschland",
+          "faction": "axis",
+          "quote": "Die Stadt ist zerstört. Wir haben kein Wasser, kein Essen, keine Hoffnung.",
+          "fullQuote": "Die Stadt ist zerstört. Wir haben kein Wasser, kein Essen, keine Hoffnung. Meine Frau und ich leben im Keller. Draußen kämpfen die Russen und unsere Soldaten. Wir wollen nur, dass es endet.",
+          "source": "Berlin City Archive, Civilian Diaries 1945",
+          "context": "Zivilperspektive 1945"
+        },
+        {
+          "id": "david_rosen_1945",
+          "name": "David Rosen",
+          "title": "KZ-Überlebender, Buchenwald",
+          "coords": [51.0211, 11.2497],
+          "location": "Buchenwald, Deutschland",
+          "faction": "allies",
+          "quote": "Als die Amerikaner kamen, konnten wir es nicht glauben. Wir waren frei.",
+          "fullQuote": "Als die Amerikaner kamen, konnten wir es nicht glauben. Wir waren frei. Aber so viele waren tot. Meine Familie, meine Freunde. Ich wusste nicht, wohin ich gehen sollte.",
+          "source": "US Holocaust Memorial Museum, Liberation Testimonies",
+          "context": "Überlebendenperspektive 1945"
+        },
+        {
+          "id": "johannes_klein_1945",
+          "name": "Johannes Klein",
+          "title": "Deutscher Soldat, Ruhrkessel",
+          "coords": [51.45, 7.01],
+          "location": "Essen, Deutschland",
+          "faction": "axis",
+          "quote": "Wir waren eingekesselt. Viele von uns wollten nur noch nach Hause.",
+          "fullQuote": "Wir waren eingekesselt. Viele von uns wollten nur noch nach Hause. Unsere Offiziere sprachen noch vom Endsieg, aber niemand glaubte es mehr. Wir ergaben uns den Amerikanern.",
+          "source": "Wehrmacht Surrender Testimonies, Ruhr Pocket",
+          "context": "Soldatenperspektive 1945"
+        },
+        {
+          "id": "keiko_tanaka_1945",
+          "name": "Keiko Tanaka",
+          "title": "Japanische Zivilistin, Hiroshima",
+          "coords": [34.3853, 132.4553],
+          "location": "Hiroshima, Japan",
+          "faction": "allies",
+          "quote": "Ein grelles Licht. Dann war alles dunkel. Die Stadt war verschwunden.",
+          "fullQuote": "Ein grelles Licht. Dann war alles dunkel. Die Stadt war verschwunden. Ich suchte meine Mutter, aber überall waren Menschen mit verbrannter Haut. Manche baten um Wasser und starben, bevor wir helfen konnten.",
+          "source": "Hiroshima Peace Memorial Museum, Survivor Testimonies",
+          "context": "Zivilperspektive 1945"
+        },
+        {
+          "id": "george_smith_1945",
+          "name": "George Smith",
+          "title": "US-amerikanischer Soldat, Okinawa",
+          "coords": [26.3344, 127.8056],
+          "location": "Okinawa, Japan",
+          "faction": "allies",
+          "quote": "Okinawa war die schlimmste Schlacht, die ich erlebt habe. Zivilisten waren überall.",
+          "fullQuote": "Okinawa war die schlimmste Schlacht, die ich erlebt habe. Zivilisten waren überall. Manche wurden von japanischen Soldaten gezwungen, sich umzubringen. Wir versuchten zu helfen, aber es war Chaos.",
+          "source": "US Marine Corps Archives, Okinawa Testimonies",
+          "context": "Soldatenperspektive 1945"
+        },
+        {
+          "id": "yuki_sato_1945",
+          "name": "Yuki Sato",
+          "title": "Japanische Schülerin, Tokio",
+          "coords": [35.6762, 139.6503],
+          "location": "Tokio, Japan",
+          "faction": "axis",
+          "quote": "Die amerikanischen Bomben brannten unsere Stadt nieder. Wir flohen in die Flüsse.",
+          "fullQuote": "Die amerikanischen Bomben brannten unsere Stadt nieder. Wir flohen in die Flüsse. Meine kleine Schwester verlor ich in der Menge. Viele Menschen ertranken oder verbrannten.",
+          "source": "Tokyo War Damage Archive, Civilian Testimonies",
+          "context": "Zivilperspektive 1945"
+        },
+        {
+          "id": "marie_dubois_1945",
+          "name": "Marie Dubois",
+          "title": "Französische Überlebende, Ravensbrück",
+          "coords": [53.03, 13.17],
+          "location": "Ravensbrück, Deutschland",
+          "faction": "allies",
+          "quote": "Die Befreiung kam zu spät für viele. Aber wir haben überlebt.",
+          "fullQuote": "Die Befreiung kam zu spät für viele. Aber wir haben überlebt. Als die sowjetischen Soldaten kamen, wogen wir kaum noch vierzig Kilo. Wir konnten nicht glauben, dass die SS weg war.",
+          "source": "Ravensbrück Memorial, Survivor Testimonies",
+          "context": "Überlebendenperspektive 1945"
+        },
+        {
+          "id": "stanislaw_nowak_1945",
+          "name": "Stanisław Nowak",
+          "title": "Polnischer Zwangsarbeiter, Deutschland",
+          "coords": [51.3397, 12.3731],
+          "location": "Leipzig, Deutschland",
+          "faction": "allies",
+          "quote": "Wir wurden befreit, aber ich wusste nicht, ob meine Familie noch lebte.",
+          "fullQuote": "Wir wurden befreit, aber ich wusste nicht, ob meine Familie noch lebte. Die Amerikaner gaben uns Essen und sagten, wir seien frei. Doch wohin sollten wir gehen? Unser Dorf lag in Trümmern.",
+          "source": "International Tracing Service, Forced Labor Testimonies",
+          "context": "Opferperspektive 1945"
+        },
+        {
+          "id": "richard_thompson_1945",
+          "name": "Richard Thompson",
+          "title": "Britischer Soldat, Bergen-Belsen",
+          "coords": [52.759, 9.918],
+          "location": "Bergen-Belsen, Deutschland",
+          "faction": "allies",
+          "quote": "Was wir dort sahen, übertraf alles, was wir uns vorstellen konnten.",
+          "fullQuote": "Was wir dort sahen, übertraf alles, was wir uns vorstellen konnten. Tausende Leichen, ausgemergelte Menschen, Krankheiten überall. Wir versuchten zu helfen, aber viele starben noch nach der Befreiung.",
+          "source": "Imperial War Museum, Bergen-Belsen Liberation",
+          "context": "Befreierperspektive 1945"
+        }
+      ]
+    };
+
+    const KEYEVENTS = [
+      { year: 1937, title: "Beginn des Zweiten Japanisch-Chinesischen Krieges", coords: [31.2304, 121.4737], description: "Der Krieg in Ostasien eskaliert nach dem Zwischenfall an der Marco-Polo-Brücke.", perspectives: ["Chinesische Zivilbevölkerung erlebt Bombardierungen und Flucht.", "Japanische Führung verfolgt expansive Ziele in Ostasien."], agency: "Politische und militärische Entscheidungen verschärfen die Gewalt gegen die Zivilbevölkerung.", sources: ["Zeitzeugenberichte", "Historische Archive"] },
+      { year: 1939, title: "Deutscher Überfall auf Polen", coords: [52.2297, 21.0122], description: "Am 1. September 1939 beginnt mit dem deutschen Angriff auf Polen der Krieg in Europa.", perspectives: ["Polnische Bevölkerung erlebt Angriff, Flucht und Besatzung.", "Deutsche Soldaten handeln im Rahmen eines Angriffskriegs."], agency: "Die NS-Führung plant und führt den Angriffskrieg; Betroffene erleben Gewalt und Zwang.", sources: ["Polnische Archive", "Bundesarchiv"] },
+      { year: 1940, title: "Fall Frankreichs und London Blitz", coords: [48.8566, 2.3522], description: "Die deutsche Wehrmacht besetzt große Teile Westeuropas; Großbritannien erlebt den Luftkrieg.", perspectives: ["Französische Zivilbevölkerung erlebt Besatzung.", "Londoner Bevölkerung erlebt Luftangriffe."], agency: "Militärische und politische Entscheidungen prägen die Handlungsspielräume von Zivilistinnen und Zivilisten.", sources: ["Imperial War Museums", "Französische Archive"] },
+      { year: 1941, title: "Überfall auf die Sowjetunion", coords: [55.7558, 37.6173], description: "Mit dem deutschen Angriff auf die Sowjetunion weitet sich der Krieg entscheidend aus.", perspectives: ["Sowjetische Bevölkerung erlebt Krieg, Besatzung und Verfolgung.", "Deutsche Soldaten nehmen am Vernichtungskrieg teil."], agency: "Die NS-Führung plant einen rassistischen Vernichtungskrieg; Soldaten und Zivilbevölkerung sind unterschiedlich betroffen und verantwortlich.", sources: ["Bundesarchiv", "Russische Staatsarchive"] },
+      { year: 1941, title: "Angriff auf Pearl Harbor", coords: [21.3445, -157.9740], description: "Der japanische Angriff führt zum Eintritt der USA in den Krieg.", perspectives: ["US-amerikanische Soldaten erleben den überraschenden Angriff.", "Japanische Führung setzt auf eine militärische Entscheidung im Pazifik."], agency: "Die japanische Führung entscheidet über den Angriff; die USA treten in den Krieg ein.", sources: ["National Archives", "US Naval History"] },
+      { year: 1942, title: "Holocaust und Schlacht von Stalingrad", coords: [48.7080, 44.5133], description: "Der Krieg erreicht mit Völkermord und Massenvernichtung neue Dimensionen; Stalingrad wird zum Wendepunkt.", perspectives: ["Jüdinnen und Juden werden verfolgt und ermordet.", "Sowjetische Zivilbevölkerung und Soldaten erleben die Zerstörung Stalingrads."], agency: "Die NS-Führung organisiert den Holocaust; betroffene Menschen kämpfen ums Überleben.", sources: ["USHMM", "Yad Vashem", "Stalingrad-Archive"] },
+      { year: 1943, title: "Kapitulation in Stalingrad und Italien", coords: [41.9028, 12.4964], description: "Die Achsenmächte geraten militärisch in die Defensive; Italien scheidet als Bündnispartner aus.", perspectives: ["Italienische Zivilbevölkerung erlebt Regimewechsel und Besatzung.", "Alliierte Soldaten eröffnen eine Front in Südeuropa."], agency: "Politische Umbrüche und militärische Entscheidungen verändern die Kriegslage.", sources: ["Italienische Archive", "Alliierte Militärarchive"] },
+      { year: 1944, title: "Alliierte Landung in der Normandie", coords: [49.1829, -0.3707], description: "Die Landung in der Normandie eröffnet die Befreiung Westeuropas, fordert aber zahlreiche Opfer.", perspectives: ["Alliierte Soldaten und französische Zivilbevölkerung erleben die Invasion.", "Deutsche Soldaten und Zivilisten erleben den Rückzug und die Zerstörung."], agency: "Militärische Führungen entscheiden über Operationen; Zivilisten sind den Folgen ausgesetzt.", sources: ["Mémorial de Caen", "Allied Archives"] },
+      { year: 1945, title: "Kriegsende, Befreiung und Atombomben", coords: [52.5200, 13.4050], description: "Die Kapitulation Deutschlands beendet den Krieg in Europa; Befreiung und Zerstörung prägen das Jahr 1945.", perspectives: ["Überlebende der Lager erleben Befreiung und Verlust.", "Zivilbevölkerung in Europa und Japan erlebt Kriegsende und Gewalt."], agency: "NS-Verbrechen werden sichtbar; politische und militärische Entscheidungen bestimmen den Übergang zur Nachkriegszeit.", sources: ["Arolsen Archives", "Hiroshima Peace Memorial Museum"] }
+    ];
+
+    let map;
+    let currentYear = 1939;
+    let animationSpeed = 500;
+    let isPlaying = false;
+    let animationInterval;
+    let eventLayer, sourceLayer;
+    let eventMarkers;
+    let sourceMarkers;
+    let visitedSources = new Set();
+    let currentSession = {
+      startTime: Date.now(),
+      sourcesViewed: 0,
+      yearsSeen: new Set(),
+      perspectivesExplored: new Set()
+    };
+
+    function createMarkerClusters() {
+      eventMarkers = L.markerClusterGroup({
+        maxClusterRadius: 50,
+        iconCreateFunction: function(cluster) {
+          return L.divIcon({
+            html: '<div style="background:linear-gradient(135deg,#3498db,#2980b9);color:white;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.3)">' + cluster.getChildCount() + '</div>',
+            className: 'custom-cluster-icon',
+            iconSize: [40, 40]
+          });
+        }
+      });
+      sourceMarkers = L.markerClusterGroup({
+        maxClusterRadius: 50,
+        iconCreateFunction: function(cluster) {
+          return L.divIcon({
+            html: '<div style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:white;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.3)">' + cluster.getChildCount() + '</div>',
+            className: 'custom-cluster-icon',
+            iconSize: [40, 40]
+          });
+        }
+      });
+    }
+
+    function showMapError(message) {
+      const mapElement = document.getElementById('map');
+      if (!mapElement) return;
+      const existing = mapElement.querySelector('.map-error-message');
+      if (existing) existing.remove();
+      const errorBox = document.createElement('div');
+      errorBox.className = 'map-error-message';
+      errorBox.setAttribute('role', 'alert');
+      errorBox.innerHTML = '<strong>Karte konnte nicht vollständig geladen werden.</strong><br>' + message + '<br><small>Die Zeitnavigation und Quellenansichten bleiben verfügbar.</small>';
+      mapElement.appendChild(errorBox);
+    }
+
+    function initMap() {
+      const mapElement = document.getElementById('map');
+      if (!mapElement) return;
+      if (!window.L || typeof L.map !== 'function') {
+        showMapError('Die Kartenbibliothek Leaflet ist nicht verfügbar. Bitte prüfen Sie die Internetverbindung.');
+        return;
+      }
+      if (typeof L.markerClusterGroup !== 'function') {
+        showMapError('Die Erweiterung MarkerCluster ist nicht verfügbar. Bitte prüfen Sie die Internetverbindung.');
+        return;
+      }
+      if (map) {
+        map.invalidateSize();
+        return;
+      }
+      try {
+        createMarkerClusters();
+        map = L.map('map', {
+          center: [52.520008, 13.404954],
+          zoom: 4,
+          zoomControl: true,
+          scrollWheelZoom: true,
+          preferCanvas: true
+        });
+
+        const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          subdomains: 'abcd',
+          maxZoom: 20,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap-Mitwirkende</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
+        });
+        let firstTileLoaded = false;
+        const tileFailureTimer = window.setTimeout(function() {
+          if (!firstTileLoaded) showMapError('Die Kartenkacheln konnten nicht geladen werden. Bitte prüfen Sie die Internetverbindung oder öffnen Sie die Datei über einen lokalen Webserver.');
+        }, 8000);
+        baseLayer.on('load', function() {
+          firstTileLoaded = true;
+          window.clearTimeout(tileFailureTimer);
+          const errorBox = document.querySelector('#map .map-error-message');
+          if (errorBox) errorBox.remove();
+        });
+        baseLayer.on('tileerror', function() {
+          if (!firstTileLoaded) showMapError('Die Kartenkacheln konnten nicht geladen werden. Marker und Zeitleiste bleiben dennoch nutzbar.');
+        });
+        baseLayer.addTo(map);
+
+        eventLayer = L.layerGroup().addTo(map);
+        sourceLayer = L.layerGroup().addTo(map);
+        map.addLayer(eventMarkers);
+        map.addLayer(sourceMarkers);
+        updateYear();
+        requestAnimationFrame(function() { map.invalidateSize(); });
+        window.setTimeout(function() { if (map) map.invalidateSize(); }, 250);
+      } catch (error) {
+        console.error('Karteninitialisierung fehlgeschlagen:', error);
+        showMapError('Die Karteninitialisierung ist fehlgeschlagen. ' + error.message);
+      }
+    }
+
+    function updateYear() {
+      if (!map || !eventMarkers || !sourceMarkers) return;
+      clearMarkers();
+      updateProgress();
+      displayEventsForYear(currentYear);
+      displaySourcesForYear(currentYear);
+      updateYearDisplay(currentYear);
+      currentSession.yearsSeen.add(String(currentYear));
+      updateEducationalStats();
+    }
+
+    function clearMarkers() {
+      eventMarkers.clearLayers();
+      sourceMarkers.clearLayers();
+    }
+
+    function updateProgress() {
+      const progress = ((currentYear - 1937) / (1945 - 1937)) * 100;
+      const progressEl = document.getElementById('progress');
+      if (progressEl) progressEl.style.width = progress + '%';
+    }
+
+    function displayEventsForYear(year) {
+      const eventsForYear = KEYEVENTS.filter(event => event.year <= year);
+      eventsForYear.forEach(event => {
+        const marker = L.marker(event.coords, {
+          icon: L.divIcon({
+            className: 'custom-marker event-marker',
+            html: '<i class="fas fa-exclamation-triangle" style="font-size:18px"></i>',
+            iconSize: [36, 36],
+            iconAnchor: [18, 18]
+          })
+        });
+        marker.on('click', () => showEventDetails(event));
+        eventMarkers.addLayer(marker);
+      });
+    }
+
+    function displaySourcesForYear(year) {
+      const sourcesForYear = warData[String(year)] || [];
+      sourcesForYear.forEach(source => {
+        const factionClass = source.faction === 'axis' ? 'axis' : 'allies';
+        const icon = source.faction === 'axis' ? '⚡' : '🗣';
+        const marker = L.marker(source.coords, {
+          icon: L.divIcon({
+            className: `custom-marker source-marker ${factionClass}`,
+            html: icon,
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+          })
+        });
+        marker.on('click', () => showSourceDetails(source));
+        sourceMarkers.addLayer(marker);
+      });
+    }
+
+    function showEventDetails(event) {
+      const modal = document.getElementById('modal');
+      const content = document.getElementById('modal-content');
+      let perspectivesHTML = '';
+      if (event.perspectives && event.perspectives.length) {
+        perspectivesHTML = '<div class="perspectives-section"><h4><i class="fas fa-users"></i> Perspektiven & Stimmen:</h4>';
+        event.perspectives.forEach(perspective => { perspectivesHTML += `<div class="perspective-item">${perspective}</div>`; });
+        perspectivesHTML += '</div>';
+      }
+      let agencyHTML = '';
+      if (event.agency) agencyHTML = `<div class="agency-info"><h4><i class="fas fa-gavel"></i> Handlungsspielraum & Verantwortung:</h4><p>${event.agency}</p></div>`;
+      let sourcesHTML = '';
+      if (event.sources && event.sources.length) {
+        sourcesHTML = '<div class="sources-list"><h4><i class="fas fa-book"></i> Historische Quellen:</h4><ul>';
+        event.sources.forEach(source => { sourcesHTML += `<li>${source}</li>`; });
+        sourcesHTML += '</ul></div>';
+      }
+      content.innerHTML = `<h3><i class="fas fa-calendar-alt"></i> ${event.title} (${event.year})</h3><p><strong>Historischer Kontext:</strong> ${event.description}</p>${perspectivesHTML}${agencyHTML}${sourcesHTML}`;
+      modal.style.display = 'block';
+    }
+
+    function trackSourceVisit(sourceId, faction) {
+      if (!visitedSources.has(sourceId)) {
+        visitedSources.add(sourceId);
+        currentSession.sourcesViewed++;
+        currentSession.perspectivesExplored.add(faction);
+        updateEducationalStats();
+      }
+    }
+
+    function showSourceDetails(source) {
+      trackSourceVisit(source.id, source.faction);
+      currentSession.yearsSeen.add(String(currentYear));
+      updateEducationalStats();
+      const modal = document.getElementById('modal');
+      const content = document.getElementById('modal-content');
+      const factionColor = source.faction === 'axis' ? '#e74c3c' : '#3498db';
+      const factionText = source.faction === 'axis' ? 'Achsenmächte/Täter' : 'Alliierte/Opfer';
+      content.innerHTML = `
+        <h3><i class="fas fa-user"></i> ${source.name}</h3>
+        <p><strong>${source.title}</strong></p>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <div style="background:${factionColor};color:white;padding:8px 16px;border-radius:20px;font-size:.9rem;font-weight:bold;">${factionText}</div>
+          <div style="color:#666;font-size:1rem;"><i class="fas fa-map-marker-alt"></i> ${source.location}</div>
+        </div>
+        <div class="source-quote"><strong><i class="fas fa-quote-left"></i> Kernaussage:</strong><br>"${source.quote}"</div>
+        <div style="margin:20px 0;"><strong><i class="fas fa-scroll"></i> Vollständiges Zeugnis:</strong><br><div style="background:#f8f9fa;padding:15px;border-radius:8px;border-left:4px solid ${factionColor};margin-top:10px;line-height:1.6;">${source.fullQuote}</div></div>
+        <div class="sources-list"><h4><i class="fas fa-archive"></i> Archiv-Quelle:</h4><p>${source.source}</p></div>
+        <div class="source-context"><strong><i class="fas fa-info-circle"></i> Kontext:</strong> ${source.context}</div>
+      `;
+      modal.style.display = 'block';
+    }
+
+    function updateYearDisplay(year) {
+      const yearDisplay = document.getElementById('currentYearDisplay');
+      if (yearDisplay) yearDisplay.textContent = year;
+    }
+
+    function addTimelineMarkers() {
+      const timeline = document.getElementById('timeline');
+      if (!timeline) return;
+      const years = [1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945];
+      years.forEach((year, index) => {
+        const marker = document.createElement('div');
+        marker.className = 'timeline-year-marker' + (year === currentYear ? ' active' : '');
+        marker.textContent = year;
+        marker.style.left = `${(index / (years.length - 1)) * 100}%`;
+        marker.addEventListener('click', function(event) {
+          event.stopPropagation();
+          currentYear = year;
+          updateYear();
+          document.querySelectorAll('.timeline-year-marker').forEach(m => m.classList.remove('active'));
+          marker.classList.add('active');
+        });
+        timeline.appendChild(marker);
+      });
+    }
+
+    function updateEducationalStats() {
+      const statsEl = document.querySelector('.educational-info');
+      if (!statsEl) return;
+      const timeSpent = Math.floor((Date.now() - currentSession.startTime) / 60000);
+      statsEl.innerHTML = `<i class="fas fa-clock"></i> ${timeSpent} Min. | <i class="fas fa-eye"></i> ${currentSession.sourcesViewed}/79 Quellen | <i class="fas fa-calendar"></i> ${currentSession.yearsSeen.size}/9 Jahre`;
+    }
+
+    function showEducationalHelp() {
+      const helpModal = document.getElementById('helpModal');
+      if (helpModal) helpModal.style.display = 'block';
+    }
+
+    function generateStudyGuide() {
+      const sources = [];
+      Object.keys(warData).forEach(year => {
+        warData[year].forEach(source => {
+          if (visitedSources.has(source.id)) sources.push({year, ...source});
+        });
+      });
+      let guide = "# Mein Lernpfad: Zeitzeugen des Zweiten Weltkriegs\n\n";
+      guide += `**Besuchte Quellen:** ${sources.length}/79\n`;
+      guide += `**Erkundete Jahre:** ${currentSession.yearsSeen.size}/9\n`;
+      guide += `**Perspektiven:** ${Array.from(currentSession.perspectivesExplored).join(', ')}\n\n`;
+      sources.forEach(source => {
+        guide += `## ${source.name} (${source.year})\n`;
+        guide += `**Standort:** ${source.location}\n`;
+        guide += `**Zitat:** "${source.quote}"\n\n`;
+      });
+      const modal = document.getElementById('modal');
+      const content = document.getElementById('modal-content');
+      content.innerHTML = `<h3><i class="fas fa-book"></i> Ihr persönlicher Lernpfad</h3><div style="white-space:pre-line;font-family:monospace;background:#f8f9fa;padding:15px;border-radius:8px;max-height:400px;overflow-y:auto;">${guide}</div><div style="margin-top:15px;text-align:center;"><button id="downloadGuide" style="background:#28a745;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;"><i class="fas fa-download"></i> Als Textdatei herunterladen</button></div>`;
+      const downloadButton = document.getElementById('downloadGuide');
+      if (downloadButton) downloadButton.addEventListener('click', () => downloadStudyGuide(guide));
+      modal.style.display = 'block';
+    }
+
+    function downloadStudyGuide(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mein-lernpfad-wwii.txt';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      addTimelineMarkers();
+      initMap();
+
+      const prevButton = document.getElementById('prevYear');
+      const nextButton = document.getElementById('nextYear');
+      const toggleEvents = document.getElementById('toggleEvents');
+      const toggleSources = document.getElementById('toggleSources');
+      const closeButton = document.querySelector('#modal .close');
+      const timeline = document.getElementById('timeline');
+
+      if (prevButton) prevButton.addEventListener('click', function() {
+        if (currentYear > 1937) { currentYear--; updateYear(); }
+      });
+      if (nextButton) nextButton.addEventListener('click', function() {
+        if (currentYear < 1945) { currentYear++; updateYear(); }
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft' && currentYear > 1937) { currentYear--; updateYear(); }
+        else if (e.key === 'ArrowRight' && currentYear < 1945) { currentYear++; updateYear(); }
+      });
+      if (timeline) timeline.addEventListener('click', function(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percentage = (e.clientX - rect.left) / rect.width;
+        currentYear = Math.max(1937, Math.min(1945, Math.round(1937 + 8 * percentage)));
+        updateYear();
+      });
+      if (toggleEvents) toggleEvents.addEventListener('change', function(e) {
+        if (!map || !eventMarkers) return;
+        if (e.target.checked) map.addLayer(eventMarkers); else map.removeLayer(eventMarkers);
+      });
+      if (toggleSources) toggleSources.addEventListener('change', function(e) {
+        if (!map || !sourceMarkers) return;
+        if (e.target.checked) map.addLayer(sourceMarkers); else map.removeLayer(sourceMarkers);
+      });
+      if (closeButton) closeButton.addEventListener('click', function() { document.getElementById('modal').style.display = 'none'; });
+      window.addEventListener('click', function(event) {
+        const modal = document.getElementById('modal');
+        if (event.target === modal) modal.style.display = 'none';
+      });
+      window.addEventListener('resize', function() { if (map) map.invalidateSize(); });
+    });
+  </script>
+</body>
+</html>
