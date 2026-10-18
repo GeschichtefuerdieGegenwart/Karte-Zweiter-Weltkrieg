@@ -5169,7 +5169,7 @@ L.Marker.include({
   </script>
 
   <div class="educational-info">
-    <i class="fas fa-clock"></i> 0 Min. | <i class="fas fa-eye"></i> 0/79 Quellen | <i class="fas fa-calendar"></i> 0/9 Jahre
+    <i class="fas fa-clock"></i> 0 Min. | <i class="fas fa-eye"></i> 0/<span id="quellen-gesamt">21</span> Quellen | <i class="fas fa-calendar"></i> 0/9 Jahre
   </div>
 
   <button class="help-button" onclick="showEducationalHelp()" title="Hilfe & Anleitung">
@@ -5245,7 +5245,7 @@ L.Marker.include({
         const timeSpent = Math.floor((Date.now() - currentSession.startTime) / 60000);
         statsEl.innerHTML = `
           <i class="fas fa-clock"></i> ${timeSpent} Min. | 
-          <i class="fas fa-eye"></i> ${currentSession.sourcesViewed}/79 Quellen | 
+          <i class="fas fa-eye"></i> ${currentSession.sourcesViewed}/${Object.keys(warData).reduce((s, y) => s + warData[y].length, 0)} Quellen | 
           <i class="fas fa-calendar"></i> ${currentSession.yearsSeen.size}/9 Jahre
         `;
       }
@@ -5267,7 +5267,7 @@ L.Marker.include({
       });
 
       let guide = "# Mein Lernpfad: Zeitzeugen des Zweiten Weltkriegs\n\n";
-      guide += `**Besuchte Quellen:** ${sources.length}/79\n`;
+      guide += `**Besuchte Quellen:** ${sources.length}/${Object.keys(warData).reduce((s, y) => s + warData[y].length, 0)}\n`;
       guide += `**Erkundete Jahre:** ${currentSession.yearsSeen.size}/9\n`;
       guide += `**Perspektiven:** ${Array.from(currentSession.perspectivesExplored).join(', ')}\n\n`;
 
