@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+"""Geprüfte Quellen für die Karte (Stand Oktober 2026).
+
+Jeder Eintrag hat: Wortlaut nur aus der genannten Fundstelle, Datum, Art der Quelle,
+Link zur Prüfung. Übersetzungen ins Deutsche sind eigene und als solche markiert.
+Längere Passagen sind gekürzt (…), nichts ist ergänzt.
+
+Aufruf: python3 tools/zeitzeugen-geprueft.py  → schreibt daten/zeitzeugen.json
+und setzt die Daten in index.html ein.
+"""
+import json, re, pathlib
+
+HANSARD = "https://api.parliament.uk/historic-hansard/"
+G = "geprüft Oktober 2026"
+
+def e(**k):
+    k.setdefault("pruefung", G)
+    return k
+
+D = {
+"1937": [],
+"1938": [
+ e(id="chamberlain_1938_10_03", name="Neville Chamberlain", title="Premierminister (Konservative)", location="Unterhaus, London",
+   coords=[51.4995,-0.1248], faction="allies", art="Rede im Unterhaus",
+   quote="… eine Katastrophe abgewendet, die die Zivilisation, wie wir sie kennen, beendet hätte.",
+   fullQuote="Chamberlain verteidigt das Münchner Abkommen: Man habe „eine Katastrophe abgewendet, die die Zivilisation, wie wir sie kennen, beendet hätte“.<br><i>Original: “… averted a catastrophe which would have ended civilisation as we have known it”</i>",
+   source="House of Commons, 3. Oktober 1938, Hansard Bd. 339, Sp. 45 · Übersetzung: eigene",
+   url=HANSARD+"commons/1938/oct/03/prime-ministers-statement", context="Debatte über das Münchner Abkommen"),
+ e(id="attlee_1938_10_03", name="Clement Attlee", title="Oppositionsführer (Labour)", location="Unterhaus, London",
+   coords=[51.4997,-0.1252], faction="allies", art="Rede im Unterhaus",
+   quote="Das war kein Sieg der Vernunft und der Menschlichkeit. Es war ein Sieg der rohen Gewalt.",
+   fullQuote="„Das war kein Sieg der Vernunft und der Menschlichkeit. Es war ein Sieg der rohen Gewalt.“<br><i>Original: “This has not been a victory for reason and humanity. It has been a victory for brute force.”</i>",
+   source="House of Commons, 3. Oktober 1938, Hansard Bd. 339, Sp. 51 · Übersetzung: eigene",
+   url=HANSARD+"commons/1938/oct/03/prime-ministers-statement", context="Debatte über das Münchner Abkommen"),
+ e(id="churchill_1938_10_05", name="Winston Churchill", title="Abgeordneter (Konservative)", location="Unterhaus, London",
+   coords=[51.4993,-0.1244], faction="allies", art="Rede im Unterhaus",
+   quote="Das ist erst der Anfang der Abrechnung.",
+   fullQuote="„Das ist erst der Anfang der Abrechnung.“<br><i>Original: “This is only the beginning of the reckoning.”</i>",
+   source="House of Commons, 5. Oktober 1938, Hansard Bd. 339, Sp. 373 · Übersetzung: eigene",
+   url=HANSARD+"commons/1938/oct/05/policy-of-his-majestys-government", context="Debatte über das Münchner Abkommen"),
+],
+"1939": [
+ e(id="chamberlain_1939_09_03", name="Neville Chamberlain", title="Premierminister (Konservative)", location="Unterhaus, London",
+   coords=[51.4995,-0.1248], faction="allies", art="Rede im Unterhaus",
+   quote="… und folglich befindet sich dieses Land im Krieg mit Deutschland.",
+   fullQuote="„Eine solche Zusicherung ist bis zur gesetzten Frist nicht eingegangen, und folglich befindet sich dieses Land im Krieg mit Deutschland.“ … „Alles, wofür ich gearbeitet habe, alles, worauf ich gehofft habe, alles, woran ich in meinem öffentlichen Leben geglaubt habe, ist in Trümmer gefallen.“<br><i>Original: “No such undertaking was received by the time stipulated, and, consequently, this country is at war with Germany.” … “Everything that I have worked for, everything that I have hoped for, everything that I have believed in during my public life, has crashed into ruins.”</i>",
+   source="House of Commons, 3. September 1939, Hansard Bd. 351, Sp. 292 · Übersetzung: eigene",
+   url=HANSARD+"commons/1939/sep/03/prime-ministers-announcement", context="Kriegserklärung nach Ablauf des Ultimatums"),
+ e(id="mork_1939_09_01", name="Werner Mork (Jahrgang 1921)", title="damals Angestellter in Bremen", location="Bremen",
+   coords=[53.0793,8.8017], faction="axis", art="Erinnerung, aufgeschrieben 2004",
+   quote="Nur bei meiner Mutter verspürte ich eine große Nervosität.",
+   fullQuote="Werner Mork erinnert sich an den 1. September 1939: „Nur bei meiner Mutter verspürte ich eine große Nervosität.“ Wenige Tage später meldet er sich ohne Wissen der Eltern freiwillig zur Waffen-SS; „Meine Mutter war nun voller Sorge“.<br><i>Die Erinnerung wurde über 60 Jahre später aufgeschrieben.</i>",
+   source="LeMO-Zeitzeugen, Deutsches Historisches Museum / Haus der Geschichte, Eintrag vom Juli 2004",
+   url="https://www.dhm.de/lemo/zeitzeugen/werner-mork-kriegsbeginn-am-1-september-1939", context="Kriegsbeginn in Deutschland"),
+],
+"1940": [
+ e(id="churchill_1940_05_13", name="Winston Churchill", title="Premierminister seit 10. Mai 1940", location="Unterhaus, London",
+   coords=[51.4995,-0.1248], faction="allies", art="Rede im Unterhaus",
+   quote="Ich habe nichts zu bieten außer Blut, Mühsal, Tränen und Schweiß.",
+   fullQuote="„Ich habe nichts zu bieten außer Blut, Mühsal, Tränen und Schweiß.“ … „Es ist der Sieg, der Sieg um jeden Preis, der Sieg trotz allen Schreckens, der Sieg, wie lang und hart der Weg auch sein mag; denn ohne Sieg gibt es kein Überleben.“<br><i>Original: “I have nothing to offer but blood, toil, tears and sweat.” … “It is victory, victory at all costs, victory in spite of all terror, victory, however long and hard the road may be; for without victory, there is no survival.”</i>",
+   source="House of Commons, 13. Mai 1940, Hansard Bd. 360, Sp. 1502 · Übersetzung: eigene",
+   url=HANSARD+"commons/1940/may/13/his-majestys-government-1", context="Erste Rede als Premierminister, drei Tage nach dem deutschen Angriff im Westen"),
+ e(id="kriegskabinett_1940_05_26", name="Kriegskabinett: Halifax und Churchill", title="Protokoll der Sitzungen am 26. Mai 1940", location="Downing Street, London",
+   coords=[51.5034,-0.1276], faction="allies", art="Sitzungsprotokoll (indirekte Rede)",
+   quote="Sollen wir über Mussolini nach Friedensbedingungen fragen?",
+   fullQuote="Außenminister Halifax hält Verhandlungen für denkbar, „wenn er [Churchill] davon überzeugt wäre, dass Dinge, die für die Unabhängigkeit dieses Landes lebenswichtig sind, unberührt blieben“. Churchill erklärt, „das Einzige, was zu tun sei, sei ihm [Hitler] zu zeigen, dass er dieses Land nicht erobern könne“.<br><i>Original: “If he was satisfied that matters vital to the independence of this country were unaffected” · “The only thing to do was to show him that he could not conquer this country”</i>",
+   source="War Cabinet, 26. Mai 1940, The National Archives CAB 65/13; zitiert nach The National Archives Blog „Light in the darkest hour“ · Übersetzung: eigene",
+   url="https://blog.nationalarchives.gov.uk/light-in-the-darkest-hour/", context="Belgien steht vor der Kapitulation, die Armee ist bei Dünkirchen eingeschlossen"),
+ e(id="dalton_1940_05_28", name="Hugh Dalton", title="Minister (Labour), Tagebuch", location="Unterhaus, London",
+   coords=[51.4999,-0.1260], faction="allies", art="Tagebuch",
+   quote="Wir werden weitermachen und es ausfechten, hier oder anderswo.",
+   fullQuote="Dalton notiert Churchills Worte vor den Ministern am 28. Mai 1940: „Wir werden weitermachen und es ausfechten, hier oder anderswo.“ Über die Reaktion: „Niemand äußerte auch nur den leisesten Anflug von Widerspruch.“<br><i>Original: “We shall go on and we shall fight it out, here or elsewhere” · “No one expressed even the faintest flicker of dissent.”</i>",
+   source="Tagebuch Hugh Dalton, 28. Mai 1940; zitiert nach The National Archives Blog und International Churchill Society · Übersetzung: eigene",
+   url="https://winstonchurchill.org/life-of-churchill/war-leader/convinces-cabinet-to-fight-on-belgium-surrenders/", context="Entscheidung gegen Friedensverhandlungen"),
+ e(id="churchill_1940_06_04", name="Winston Churchill", title="Premierminister", location="Unterhaus, London",
+   coords=[51.4995,-0.1248], faction="allies", art="Rede im Unterhaus",
+   quote="Wir werden niemals kapitulieren.",
+   fullQuote="Die Schiffe haben „über 335 000 Mann, Franzosen und Briten, aus dem Rachen von Tod und Schande“ geholt. … „Wir werden an den Stränden kämpfen, wir werden auf den Landeplätzen kämpfen, wir werden auf den Feldern und in den Straßen kämpfen, wir werden in den Hügeln kämpfen; wir werden niemals kapitulieren.“<br><i>Original: “carried over 335,000 men, French and British, out of the jaws of death and shame” … “We shall fight on the beaches, we shall fight on the landing grounds, we shall fight in the fields and in the streets, we shall fight in the hills; we shall never surrender”</i>",
+   source="House of Commons, 4. Juni 1940, Hansard Bd. 361, Sp. 791 und 796 · Übersetzung: eigene",
+   url=HANSARD+"commons/1940/jun/04/war-situation", context="Nach der Evakuierung aus Dünkirchen"),
+ e(id="churchill_1940_06_18", name="Winston Churchill", title="Premierminister", location="Unterhaus, London",
+   coords=[51.4995,-0.1248], faction="allies", art="Rede im Unterhaus",
+   quote="Dies war ihre größte Stunde.",
+   fullQuote="„Wir haben derzeit auf dieser Insel über eineinviertel Millionen Mann unter Waffen.“ … Man werde, wenn das Commonwealth tausend Jahre bestehe, noch sagen: „Dies war ihre größte Stunde.“<br><i>Original: “We have under arms at the present time in this island over a million and a quarter men.” … “This was their finest hour.”</i>",
+   source="House of Commons, 18. Juni 1940, Hansard Bd. 362, Sp. 53 und 60–61 · Übersetzung: eigene",
+   url=HANSARD+"commons/1940/jun/18/war-situation", context="Frankreich bittet um Waffenstillstand"),
+],
+"1941": [
+ e(id="churchill_1941_06_22", name="Winston Churchill", title="Premierminister", location="London (Rundfunk)",
+   coords=[51.5185,-0.1438], faction="allies", art="Rundfunkansprache",
+   quote="Die russische Gefahr ist daher unsere Gefahr.",
+   fullQuote="„Niemand ist in den letzten fünfundzwanzig Jahren ein beständigerer Gegner des Kommunismus gewesen als ich.“ … „Jeder Mensch und jeder Staat, der gegen den Nationalsozialismus kämpft, wird unsere Hilfe haben.“ … „Die russische Gefahr ist daher unsere Gefahr und die Gefahr der Vereinigten Staaten.“<br><i>Original: “Noone has been a more consistent opponent of Communism than I have for the last twenty-five years.” … “Any man or State who fights against Nazism will have our aid.” … “The Russian danger is therefore our danger and the danger of the United States”</i>",
+   source="Rundfunkansprache, 22. Juni 1941, Wortlaut nach der Sammlung „Pearl Harbor History Associates“ (ibiblio); andere Abdrucke weichen im Wortlaut leicht ab · Übersetzung: eigene",
+   url="https://ibiblio.org/pha/timeline/410622dwp.html", context="Am Morgen hat Deutschland die Sowjetunion angegriffen"),
+ e(id="stalin_1941_07_03", name="Josef Stalin", title="Regierungschef der Sowjetunion", location="Moskau (Rundfunk)",
+   coords=[55.7520,37.6175], faction="allies", art="Rundfunkansprache",
+   quote="Unser Krieg für die Freiheit unseres Landes wird sich mit dem Kampf der Völker Europas und Amerikas vereinen.",
+   fullQuote="Stalin nennt „die historische Erklärung des britischen Premierministers, Herrn Churchill, über Hilfe für die Sowjetunion“ verständlich. „Unser Krieg für die Freiheit unseres Landes wird sich mit dem Kampf der Völker Europas und Amerikas vereinen.“<br><i>Englische Fassung: “the historic utterance of the British Prime Minister, Mr. Churchill, regarding aid to the Soviet Union” · “Our war for the freedom of our country will merge with the struggle of the peoples of Europe and America”</i>",
+   source="Rundfunkansprache, 3. Juli 1941; englische Fassung im Stalin-Archiv auf marxists.org (Übersetzer nicht genannt) · Übersetzung ins Deutsche: eigene",
+   url="https://www.marxists.org/reference/archive/stalin/works/1941/07/03.htm", context="Erste Rede Stalins nach dem deutschen Angriff"),
+ e(id="abkommen_1941_07_12", name="Britisch-sowjetisches Abkommen", title="Vertragstext", location="Moskau",
+   coords=[55.7539,37.6208], faction="allies", art="Vertrag",
+   quote="Beide Regierungen verpflichten sich, einander Hilfe und Unterstützung jeder Art zu leisten.",
+   fullQuote="1. „Die beiden Regierungen verpflichten sich gegenseitig, einander im gegenwärtigen Krieg gegen Hitlerdeutschland Hilfe und Unterstützung jeder Art zu leisten.“ 2. Sie werden während dieses Krieges ohne gegenseitiges Einverständnis weder verhandeln noch einen Waffenstillstand oder Frieden schließen.<br><i>Original: “The two Governments mutually undertake to render each other assistance and support of all kinds in the present war against Hitlerite Germany.” · “They further undertake that during this war they will neither negotiate nor conclude an armistice or treaty of peace except by mutual agreement.”</i>",
+   source="Agreement between the United Kingdom and the USSR, Moskau, 12. Juli 1941; Wortlaut nach Avalon Project, Yale Law School · Übersetzung: eigene",
+   url="https://avalon.law.yale.edu/wwii/brsov41.asp", context="Aus der Zusammenarbeit wird ein Bündnis"),
+],
+"1942": [
+ e(id="area_bombing_1942_02_14", name="Weisung des Luftfahrtministeriums", title="„Area Bombing Directive“ an das Bomber Command", location="Air Ministry, London",
+   coords=[51.5128,-0.1210], faction="allies", art="Dienstanweisung",
+   quote="Die Angriffe auf die Moral der feindlichen Zivilbevölkerung richten, besonders der Industriearbeiter.",
+   fullQuote="Weisung vom 14. Februar 1942: Die Angriffe sollen sich auf „die Moral der feindlichen Zivilbevölkerung und insbesondere der Industriearbeiter“ richten. Luftmarschall Portal ergänzt am 15. Februar: Zielpunkte seien „die bebauten Gebiete, und nicht etwa die Werften oder Flugzeugfabriken“.<br><i>Original: “To focus attacks on the morale of the enemy civil population and in particular the industrial workers.” · “the aiming points will be the built up areas, and not, for instance, the dockyards or aircraft factories”</i>",
+   source="Air Ministry, General Directive No. 5, 14. Februar 1942 (nach Harris/Cox 1995, S. 192); Notiz Portal an Bottomley, 15. Februar 1942 (nach Porter 1998, S. 160); beides nach Wikipedia „Area bombing directive“ · Übersetzung: eigene",
+   url="https://en.wikipedia.org/wiki/Area_bombing_directive", context="Beginn der Flächenbombardierung deutscher Städte"),
+ e(id="harris_1942_06", name="Arthur Harris", title="Oberbefehlshaber des Bomber Command", location="London",
+   coords=[51.5100,-0.1300], faction="allies", art="Filmaufnahme für die Wochenschau",
+   quote="Sie haben Wind gesät und werden nun Sturm ernten.",
+   fullQuote="„Die Nazis sind in diesen Krieg mit der ziemlich kindischen Vorstellung gezogen, sie würden alle anderen bombardieren …“ – „Sie haben Wind gesät und werden nun Sturm ernten.“ – „Köln, Lübeck, Rostock – das ist erst der Anfang.“<br><i>Original: “The Nazis entered this war under the rather childish delusion that they were going to bomb everybody else …” · “They sowed the wind and now they are going to reap the whirlwind.” · “Cologne, Lubeck, Rostock—Those are only just the beginning.”</i>",
+   source="Aufnahme der Royal Air Force Films, Juni 1942, nach dem Angriff auf Köln (30./31. Mai 1942); Wortlaut nach Air & Space Forces Magazine · Übersetzung: eigene",
+   url="https://www.airandspaceforces.com/article/0911keeperfile/", context="Nach dem ersten „Tausend-Bomber-Angriff“"),
+],
+"1943": [
+ e(id="goebbels_1943_02_18", name="Joseph Goebbels", title="Reichspropagandaminister", location="Sportpalast, Berlin",
+   coords=[52.4970,13.3590], faction="axis", art="Propagandarede",
+   quote="Wollt ihr den totalen Krieg?!",
+   fullQuote="„Wollt ihr den totalen Krieg?!“ … „Wollt ihr ihn, wenn nötig, totaler und radikaler, als wir ihn uns heute überhaupt erst vorstellen können?!“<br><i>Propagandarede vor ausgewähltem Publikum, nach der Niederlage in Stalingrad. Die Tonaufnahme weicht an einigen Stellen von der gedruckten Fassung ab.</i>",
+   source="Rede im Berliner Sportpalast, 18. Februar 1943, gedruckte Fassung; nach Wikipedia „Sportpalast speech“",
+   url="https://en.wikipedia.org/wiki/Sportpalast_speech", context="NS-Propaganda: nur zur Analyse"),
+ e(id="wolff_moenckeberg_1943_08_24", name="Mathilde Wolff-Mönckeberg", title="Hamburgerin, Brief an ihre Kinder", location="Hamburg",
+   coords=[53.5511,9.9937], faction="axis", art="Brief (damals nicht abgeschickt)",
+   quote="Ich habe noch nie solche richtige Todesangst empfunden, solche Todesnähe.",
+   fullQuote="„Ich habe noch nie solche richtige Todesangst empfunden, solche Todesnähe.“ … „Eltern und Kinder wurden im Gedränge auseinandergerissen und fanden sich nicht wieder“.",
+   source="Brief vom 24. August 1943; in: Mathilde Wolff-Mönckeberg, Briefe, die sie nicht erreichten, hg. von Ruth Evans, Hamburg 1980, S. 91–92; nach German History in Documents and Images (GHDI)",
+   url="https://germanhistorydocs.org/de/deutschland-nationalsozialismus-1933-1945/brief-der-augenzeugin-mathilde-wolff-moenckeberg-ueber-die-folgen-des-hamburger-feuersturms-24-august-1943", context="Nach den Luftangriffen auf Hamburg im Juli 1943 („Operation Gomorrha“)"),
+],
+"1944": [
+ e(id="bell_1944_02_09", name="George Bell", title="Bischof von Chichester, Oberhaus", location="House of Lords, London",
+   coords=[51.4987,-0.1251], faction="allies", art="Rede im Oberhaus",
+   quote="Die Politik ist Auslöschung, offen eingestanden. Das ist keine zu rechtfertigende Kriegshandlung.",
+   fullQuote="„Hitler ist ein Barbar.“ … „Eine ganze Stadt auszulöschen, weil bestimmte Teile militärische und industrielle Einrichtungen enthalten, heißt, das Gleichgewicht aufzugeben.“ … „Die Politik ist Auslöschung, offen eingestanden. Das ist keine zu rechtfertigende Kriegshandlung.“<br><i>Original: “Hitler is a barbarian.” … “To obliterate a whole town because certain portions contain military and industrial establishments is to reject the balance.” … “The policy is obliteration, openly acknowledged. That is not a justifiable act of war.”</i>",
+   source="House of Lords, 9. Februar 1944, Hansard Bd. 130, Sp. 739–741 · Übersetzung: eigene",
+   url=HANSARD+"lords/1944/feb/09/bombing-policy", context="Debatte über die Bombenpolitik"),
+ e(id="cranborne_1944_02_09", name="Viscount Cranborne", title="für die Regierung, Oberhaus", location="House of Lords, London",
+   coords=[51.4985,-0.1255], faction="allies", art="Rede im Oberhaus",
+   quote="Der einzige Weg, dieses Grauen zu beenden, ist, unsere Feinde schnell und vollständig zu besiegen.",
+   fullQuote="„Die harte, unausweichliche Tatsache ist, dass Krieg etwas Schreckliches ist und nicht ohne Leid geführt werden kann“. Die großen Zentren der Verwaltung, der Produktion und des Verkehrs seien „in einem totalen Krieg selbst militärische Ziele“. „Der einzige Weg, dieses Grauen zu beenden, ist, unsere Feinde schnell und vollständig zu besiegen und einen dauerhaften Frieden herzustellen.“<br><i>Original: “The hard, inescapable fact is that war is a horrible thing, and that it cannot be carried on without suffering” · “the great centres of administration, of production and of communication are themselves military targets in a total war.” · “The only way to end this horror is to beat our enemies rapidly and completely and restore enduring peace.”</i>",
+   source="House of Lords, 9. Februar 1944, Hansard Bd. 130, Sp. 751–754 · Übersetzung: eigene",
+   url=HANSARD+"lords/1944/feb/09/bombing-policy", context="Antwort der Regierung auf Bischof Bell"),
+ e(id="lang_1944_02_09", name="Cosmo Lang", title="früherer Erzbischof von Canterbury, Oberhaus", location="House of Lords, London",
+   coords=[51.4989,-0.1247], faction="allies", art="Rede im Oberhaus",
+   quote="Ein Wettstreit, den wir nur gewinnen können, wenn wir das Beste und Edelste unserer Traditionen opfern.",
+   fullQuote="„Ich glaube nicht, dass man sagen kann, diese Politik sei bei diesen offenbar gezielten Versuchen, ganze Städte zu zerstören, eingehalten worden“. Vergeltung sei „ein Wettstreit, den wir nur gewinnen können, wenn wir das Beste und Edelste in den Traditionen unseres Volkes opfern“.<br><i>Original: “I do not think it can be said that that policy has been adhered to in these apparently deliberate attempts to destroy whole cities” · “It is a competition in which we can win only by the sacrifice of what has been best and noblest in the traditions of our race.”</i>",
+   source="House of Lords, 9. Februar 1944, Hansard Bd. 130, Sp. 748–749 · Übersetzung: eigene",
+   url=HANSARD+"lords/1944/feb/09/bombing-policy", context="Debatte über die Bombenpolitik"),
+],
+"1945": [
+ e(id="hirohito_1945_08_15", name="Kaiser Hirohito", title="Kaiser von Japan", location="Tokio (Rundfunk)",
+   coords=[35.6852,139.7528], faction="axis", art="Rundfunkansprache",
+   quote="… das Unerträgliche ertragen und das Unduldbare erdulden.",
+   fullQuote="Die Kriegslage habe sich „nicht unbedingt zu Japans Vorteil entwickelt“. Man müsse „das Unerträgliche ertragen und das Unduldbare erdulden“.<br><i>Offizielle englische Übersetzung von 1945: “the war situation has developed not necessarily to Japan's advantage” · “enduring the unendurable and suffering what is insufferable”</i>",
+   source="Rundfunkansprache („Gyokuon-hōsō“), 15. August 1945; offizielle englische Übersetzung, aufgezeichnet von der Federal Communications Commission, nach Atomic Heritage Foundation · Übersetzung ins Deutsche: eigene",
+   url="https://ahf.nuclearmuseum.org/ahf/key-documents/jewel-voice-broadcast/", context="Japan nimmt die Kapitulation an"),
+],
+}
+
+root = pathlib.Path(__file__).resolve().parent.parent
+(root / "daten").mkdir(exist_ok=True)
+(root / "daten" / "zeitzeugen.json").write_text(json.dumps(D, ensure_ascii=False, indent=1), encoding="utf-8")
+
+html = (root / "index.html").read_text(encoding="utf-8")
+i = html.index("const warData")
+st = html.index("{", i); d = 0; j = st
+while True:
+    c = html[j]
+    if c == "{": d += 1
+    elif c == "}":
+        d -= 1
+        if d == 0: break
+    j += 1
+html = html[:st] + json.dumps(D, ensure_ascii=False, indent=1) + html[j+1:]
+(root / "index.html").write_text(html, encoding="utf-8")
+print(sum(len(v) for v in D.values()), "geprüfte Einträge eingesetzt")
