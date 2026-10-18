@@ -747,7 +747,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	line-height: 30px;
 	}
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css"/>
 
   <style>
     :root{
@@ -1341,7 +1341,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <header>
     <div>
       <h1><i class="fas fa-globe-europe"></i> Der Zweite Weltkrieg</h1>
-      <div class="sub">Erweiterte Multiperspektiven-Karte mit 96+ Zeitzeugen</div>
+      <div class="sub">Multiperspektiven-Karte · geprüfte Quellen mit Fundstelle</div>
     </div>
   </header>
 
@@ -1392,11 +1392,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <h4><i class="fas fa-map-marker-alt"></i> Legende</h4>
           <div class="legend-item">
             <div class="legend-dot" style="background:linear-gradient(135deg,var(--allies),#2980b9)"></div>
-            Alliierte & Opfer
+            Alliierte
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:linear-gradient(135deg,var(--axis),#c0392b)"></div>
-            Achsenmächte & Täter
+            Achsenmächte
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:linear-gradient(135deg,var(--accent),#1e40af)"></div>
@@ -1406,7 +1406,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <div class="witness-stats">
           <h4><i class="fas fa-users"></i> Zeitzeugen-Archiv</h4>
-          <strong>96+ authentische Stimmen</strong><br>
+          <strong>Geprüfte Quellen mit Fundstelle</strong><br>
           <small>aus 9 Kriegsjahren (1937-1945)</small><br><br>
           <div style="font-size:0.9rem;text-align:left">
             ✓ Bombenkrieg London (Blitz)<br>
@@ -4202,1209 +4202,401 @@ L.Marker.include({
   <script>
     // ========== ERWEITERTE ZEITZEUGEN-DATEN ==========
     const warData = {
-        "1937": [
-                {
-                        "id": "li_wei_1937",
-                        "name": "Li Wei",
-                        "title": "Chinesischer Geschäftsmann, Nanking",
-                        "coords": [
-                                32.0603,
-                                118.7969
-                        ],
-                        "location": "Chinesischer Geschäftsmann, Nanking",
-                        "faction": "allies",
-                        "quote": "Die japanischen Teufel sind in der Stadt!",
-                        "fullQuote": "Die japanischen Teufel sind in der Stadt! Seit dem 13. Dezember ist Nanking zur Hölle geworden. Überall liegen Leichen auf den Straßen, das Blut färbt den Yangtze rot. Sie töten jeden - Soldaten, Zivilisten, Frauen, Kinder, alte Menschen. Mit Bajonetten, Schwertern, Maschinengewehren. Ich verstecke mich mit meiner Familie im Keller, aber die Schreie von draußen hören nicht auf. Die internationale Sicherheitszone von John Rabe rettet vielen das Leben, aber auch dort dringen die Soldaten ein. Meine Schwester wurde vor meinen Augen vergewaltigt und dann ermordet - sie war erst sechzehn. Zehntausende Frauen und Mädchen erleiden dasselbe Schicksal. Die Japaner machen Wettkämpfe, wer mehr Chinesen töten kann - die Zeitungen in Japan berichten darüber wie über Sport.",
-                        "source": "Iris Chang: \"The Rape of Nanking\", Basic Books 1997; Zeitzeugenberichte des Nanjing Massacre Memorial Hall",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                },
-                {
-                        "id": "hiroshi_nakamura_1937",
-                        "name": "Hiroshi Nakamura",
-                        "title": "Japanischer Offizier, Nanking",
-                        "coords": [
-                                32.07,
-                                118.8
-                        ],
-                        "location": "Japanischer Offizier, Nanking",
-                        "faction": "axis",
-                        "quote": "Der Vormarsch auf Nanking ist unstoppbar.",
-                        "fullQuote": "Der Vormarsch auf Nanking ist unstoppbar. Unsere Truppen haben die chinesischen Verteidigungslinien durchbrochen. Die Stadt wird binnen Tagen fallen. Der Kaiser wird stolz auf uns sein.",
-                        "source": "Japanisches Militärarchiv; Yoshida Yutaka: \"Tenno no guntai to Nankin jiken\"",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                },
-                {
-                        "id": "hans_schmidt_1937",
-                        "name": "Hans Schmidt",
-                        "title": "Deutscher Militärbeobachter, China",
-                        "coords": [
-                                32.08,
-                                118.81
-                        ],
-                        "location": "Deutscher Militärbeobachter, China",
-                        "faction": "axis",
-                        "quote": "Die japanische Kriegsführung ist beeindruckend effizient.",
-                        "fullQuote": "Die japanische Kriegsführung ist beeindruckend effizient. Als deutscher Militärbeobachter sehe ich hier Methoden, die wir in Europa anwenden können.",
-                        "source": "Deutsches Bundesarchiv; John Rabe: \"Der gute Deutsche von Nanking\"",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                },
-                {
-                        "id": "joseph_davies_1937",
-                        "name": "Joseph Davies",
-                        "title": "US-Botschafter, Moskau",
-                        "coords": [
-                                55.76,
-                                37.61
-                        ],
-                        "location": "US-Botschafter, Moskau",
-                        "faction": "allies",
-                        "quote": "Stalin führt wichtige Reformen durch.",
-                        "fullQuote": "Stalin führt wichtige Reformen durch, aber die Säuberungen beunruhigen mich. Die sowjetischen Generäle verschwinden einer nach dem anderen.",
-                        "source": "Joseph E. Davies: \"Mission to Moscow\", Simon & Schuster 1941",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                },
-                {
-                        "id": "neville_chamberlain_1937",
-                        "name": "Neville Chamberlain",
-                        "title": "Britischer Premierminister, London",
-                        "coords": [
-                                51.5,
-                                -0.13
-                        ],
-                        "location": "Britischer Premierminister, London",
-                        "faction": "allies",
-                        "quote": "Appeasement ist der Weg zum Frieden.",
-                        "fullQuote": "Appeasement ist der Weg zum Frieden. Hitler hat berechtigte Beschwerden über Versailles. Wenn wir ihm entgegenkommen, können wir einen neuen Weltkrieg verhindern.",
-                        "source": "Neville Chamberlain Papers; Keith Feiling: \"The Life of Neville Chamberlain\"",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                },
-                {
-                        "id": "léon_blum_1937",
-                        "name": "Léon Blum",
-                        "title": "Französischer Premierminister, Paris",
-                        "coords": [
-                                48.86,
-                                2.34
-                        ],
-                        "location": "Französischer Premierminister, Paris",
-                        "faction": "allies",
-                        "quote": "Die Volksfront kämpft gegen den Faschismus.",
-                        "fullQuote": "Die Volksfront kämpft gegen den Faschismus. In Spanien tobt bereits der Bürgerkrieg, Hitler und Mussolini unterstützen Franco.",
-                        "source": "Léon Blum: \"Mémoires\"; Archive Nationales Paris",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                },
-                {
-                        "id": "nikolai_yezhov_1937",
-                        "name": "Nikolai Yezhov",
-                        "title": "NKWD-Chef, Moskau",
-                        "coords": [
-                                55.75,
-                                37.63
-                        ],
-                        "location": "NKWD-Chef, Moskau",
-                        "faction": "allies",
-                        "quote": "Die Säuberungen reinigen die Sowjetunion von Feinden.",
-                        "fullQuote": "Die Säuberungen reinigen die Sowjetunion von Feinden des Volkes. Trotzki-Saboteure und bürgerliche Spione müssen eliminiert werden.",
-                        "source": "NKWD-Archive; Robert Conquest: \"The Great Terror\"",
-                        "context": "Zeitzeugen-Perspektive 1937"
-                }
-        ],
-        "1938": [
-                {
-                        "id": "adolf_hitler_1938",
-                        "name": "Adolf Hitler",
-                        "title": "Deutscher Führer, Wien",
-                        "coords": [
-                                48.21,
-                                16.37
-                        ],
-                        "location": "Deutscher Führer, Wien",
-                        "faction": "axis",
-                        "quote": "Österreich ist heim ins Reich gekehrt.",
-                        "fullQuote": "Österreich ist heim ins Reich gekehrt. Das Großdeutsche Reich ist Realität geworden. Die Menschen jubeln uns zu - sie wollen die Vereinigung.",
-                        "source": "Adolf Hitler: \"Mein Kampf\" & Reden; Bundesarchiv Berlin",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                },
-                {
-                        "id": "edvard_beneš_1938",
-                        "name": "Edvard Beneš",
-                        "title": "Tschechoslowakischer Präsident, Prag",
-                        "coords": [
-                                50.08,
-                                14.43
-                        ],
-                        "location": "Tschechoslowakischer Präsident, Prag",
-                        "faction": "allies",
-                        "quote": "München bedeutet das Ende der Tschechoslowakei.",
-                        "fullQuote": "München bedeutet das Ende der Tschechoslowakei. Chamberlain und Daladier haben uns verraten. \"Über uns ohne uns\" - so wird unser Schicksal entschieden.",
-                        "source": "Edvard Beneš: \"Mnichovské dny\", Tschechisches Nationalarchiv",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                },
-                {
-                        "id": "anthony_eden_1938",
-                        "name": "Anthony Eden",
-                        "title": "Britischer Außenminister, London",
-                        "coords": [
-                                51.51,
-                                -0.14
-                        ],
-                        "location": "Britischer Außenminister, London",
-                        "faction": "allies",
-                        "quote": "Chamberlains Appeasement ist ein Fehler.",
-                        "fullQuote": "Chamberlains Appeasement ist ein Fehler. Hitler kann nicht durch Zugeständnisse aufgehalten werden. Ich trete zurück - Geschichte wird zeigen, wer recht hatte.",
-                        "source": "Anthony Eden: \"Facing the Dictators\"; Foreign Office Archives",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                },
-                {
-                        "id": "georges_bonnet_1938",
-                        "name": "Georges Bonnet",
-                        "title": "Französischer Außenminister, Paris",
-                        "coords": [
-                                48.87,
-                                2.35
-                        ],
-                        "location": "Französischer Außenminister, Paris",
-                        "faction": "allies",
-                        "quote": "Frankreich will keinen Krieg um das Sudetenland.",
-                        "fullQuote": "Frankreich will keinen Krieg um das Sudetenland. Unsere Armee ist nicht bereit, das Volk ist kriegsmüde. München ist ein notwendiger Kompromiss.",
-                        "source": "Georges Bonnet: \"Défense de la paix\"; Archives du Quai d'Orsay",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                },
-                {
-                        "id": "koki_hirota_1938",
-                        "name": "Koki Hirota",
-                        "title": "Japanischer Außenminister, Tokio",
-                        "coords": [
-                                35.68,
-                                139.66
-                        ],
-                        "location": "Japanischer Außenminister, Tokio",
-                        "faction": "axis",
-                        "quote": "Japan verfolgt die europäischen Entwicklungen mit Interesse.",
-                        "fullQuote": "Japan verfolgt die europäischen Entwicklungen mit Interesse. Deutschland wird stärker, das schwächt die Westmächte in Asien. Dies könnte unsere Chance sein.",
-                        "source": "Japanisches Außenministerium; Koki Hirota Papers",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                },
-                {
-                        "id": "cordell_hull_1938",
-                        "name": "Cordell Hull",
-                        "title": "US-Außenminister, Washington",
-                        "coords": [
-                                38.91,
-                                -77.04
-                        ],
-                        "location": "US-Außenminister, Washington",
-                        "faction": "allies",
-                        "quote": "Amerika beobachtet Europas Krise mit Sorge.",
-                        "fullQuote": "Amerika beobachtet Europas Krise mit Sorge. Die Demokratien weichen vor den Diktatoren zurück. Wir müssen unsere Neutralität überdenken.",
-                        "source": "Cordell Hull: \"Memoirs\"; US State Department Archives",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                },
-                {
-                        "id": "maxim_litvinov_1938",
-                        "name": "Maxim Litvinov",
-                        "title": "Sowjetischer Außenminister, Moskau",
-                        "coords": [
-                                55.77,
-                                37.64
-                        ],
-                        "location": "Sowjetischer Außenminister, Moskau",
-                        "faction": "allies",
-                        "quote": "Die Sowjetunion bietet kollektive Sicherheit an.",
-                        "fullQuote": "Die Sowjetunion bietet kollektive Sicherheit gegen Hitler an. Aber der Westen vertraut uns nicht. München zeigt - sie werden lieber mit Hitler verhandeln.",
-                        "source": "Maxim Litvinov Papers; RGASPI Archives",
-                        "context": "Zeitzeugen-Perspektive 1938"
-                }
-        ],
-        "1939": [
-                {
-                        "id": "iwan_petrow_1939",
-                        "name": "Iwan Petrow",
-                        "title": "Sowjetischer Fabrikarbeiter, Moskau",
-                        "coords": [
-                                55.7558,
-                                37.6176
-                        ],
-                        "location": "Sowjetischer Fabrikarbeiter, Moskau",
-                        "faction": "axis",
-                        "quote": "Stalin und Hitler haben einen Pakt geschlossen!",
-                        "fullQuote": "Niemand hat es kommen sehen - unser Genosse Stalin hat einen Pakt mit Hitler unterschrieben! In der Prawda steht, es sei ein 'Triumph der sowjetischen Friedenspolitik', aber auf der Straße sind alle verwirrt. Jahrelang haben wir gegen den Faschismus gekämpft, jetzt sind die Deutschen unsere Freunde? Molotow erklärt im Radio: 'Der Abschluss des deutsch-sowjetischen Nichtangriffsvertrags bezeugt, dass sich die historische Voraussicht des Genossen Stalin glänzend erfüllt hat.' Die Partei sagt, die Westmächte hätten uns verraten, deshalb mussten wir uns schützen. Am 17. September marschiert unsere Rote Armee in Polen ein - wir 'befreien' unsere ukrainischen und weißrussischen Brüder. Die deutschen und sowjetischen Soldaten treffen sich an der Demarkationslinie und feiern gemeinsam.",
-                        "source": "RGASPI (Russisches Staatsarchiv für soziale und politische Geschichte), Fond 17; Geoffrey Roberts: \"Stalin's Wars\", Yale University Press 2006",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "zofia_kowalska_1939",
-                        "name": "Zofia Kowalska",
-                        "title": "Polnische Krankenschwester, Warschau",
-                        "coords": [
-                                52.25,
-                                20.98
-                        ],
-                        "location": "Polnische Krankenschwester, Warschau",
-                        "faction": "allies",
-                        "quote": "Deutsche und sowjetische Truppen greifen uns von beiden Seiten an.",
-                        "fullQuote": "Deutsche und sowjetische Truppen greifen uns von beiden Seiten an. Als Krankenschwester sehe ich das Leid des Krieges aus erster Hand. Polen kämpft allein gegen zwei Großmächte.",
-                        "source": "Polnisches Nationalarchiv; Norman Davies: \"Rising 44\"",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "heinz_guderian_1939",
-                        "name": "Heinz Guderian",
-                        "title": "Deutscher Panzergeneral, Polen",
-                        "coords": [
-                                52.0,
-                                21.5
-                        ],
-                        "location": "Deutscher Panzergeneral, Polen",
-                        "faction": "axis",
-                        "quote": "Der Blitzkrieg funktioniert perfekt.",
-                        "fullQuote": "Der Blitzkrieg funktioniert perfekt. Unsere Panzerdivisionen durchbrechen die polnischen Linien wie ein heißes Messer durch Butter.",
-                        "source": "Heinz Guderian: \"Erinnerungen eines Soldaten\"; Bundesarchiv Freiburg",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "lord_halifax_1939",
-                        "name": "Lord Halifax",
-                        "title": "Britischer Außenminister, London",
-                        "coords": [
-                                51.5074,
-                                -0.1278
-                        ],
-                        "location": "Britischer Außenminister, London",
-                        "faction": "allies",
-                        "quote": "Großbritannien erklärt Deutschland den Krieg.",
-                        "fullQuote": "Großbritannien erklärt Deutschland den Krieg. Chamberlains Appeasement-Politik ist gescheitert. Hitler hat Polen überfallen, wir müssen unsere Garantie einlösen.",
-                        "source": "Foreign Office Archives; Lord Halifax: \"Fullness of Days\"",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "édouard_daladier_1939",
-                        "name": "Édouard Daladier",
-                        "title": "Französischer Premierminister, Paris",
-                        "coords": [
-                                48.8566,
-                                2.3522
-                        ],
-                        "location": "Französischer Premierminister, Paris",
-                        "faction": "allies",
-                        "quote": "Frankreich steht zu seinen Bündnissen.",
-                        "fullQuote": "Frankreich steht zu seinen Bündnissen. Wir erklären Deutschland den Krieg, aber unsere Truppen bleiben hinter der Maginot-Linie.",
-                        "source": "Édouard Daladier: Mémoires; Archives Nationales",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "emperor_hirohito_1939",
-                        "name": "Emperor Hirohito",
-                        "title": "Japanischer Kaiser, Tokio",
-                        "coords": [
-                                35.6762,
-                                139.6503
-                        ],
-                        "location": "Japanischer Kaiser, Tokio",
-                        "faction": "axis",
-                        "quote": "Japan muss seine Stellung in Asien stärken.",
-                        "fullQuote": "Japan muss seine Stellung in Asien stärken. Der Krieg in China dauert bereits zwei Jahre, Europa beginnt sich zu entzweien.",
-                        "source": "Imperial Archives Japan; Herbert Bix: \"Hirohito and the Making of Modern Japan\"",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "franklin_d._roosevelt_1939",
-                        "name": "Franklin D. Roosevelt",
-                        "title": "US-Präsident, Washington",
-                        "coords": [
-                                38.9072,
-                                -77.0369
-                        ],
-                        "location": "US-Präsident, Washington",
-                        "faction": "allies",
-                        "quote": "Amerika muss den Demokratien helfen.",
-                        "fullQuote": "Amerika muss den Demokratien helfen, aber das Volk will keinen Krieg. Ich werde das Neutralitätsgesetz ändern - \"Cash and Carry\" erlaubt Waffenverkäufe.",
-                        "source": "Franklin D. Roosevelt Library; Doris Kearns Goodwin: \"No Ordinary Time\"",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                },
-                {
-                        "id": "aimo_korhonen_1939",
-                        "name": "Aimo Korhonen",
-                        "title": "Finnischer Soldat, Karelische Landenge",
-                        "coords": [
-                                60.1699,
-                                24.9384
-                        ],
-                        "location": "Finnischer Soldat, Karelische Landenge",
-                        "faction": "allies",
-                        "quote": "Sisu - das ist unser Wort für den Mut der Verzweiflung.",
-                        "fullQuote": "Sisu - das ist unser Wort für den Mut der Verzweiflung. Stalin schickt eine Million Soldaten gegen unser kleines Land, aber wir Finnen weichen nicht! Bei minus 40 Grad kämpfen wir auf Skiern gegen die roten Panzer. Motti-Taktik nennen wir unsere Guerilla-Methode - wir schneiden die sowjetischen Divisionen ab wie Brennholz. Die Rote Armee erfriert in ihren Stellungen, während wir uns lautlos durch die Wälder bewegen. Die Mannerheim-Linie hält stand, obwohl sie hoffnungslos unterlegen ist. Die ganze Welt schaut auf uns - kleine Finnland gegen den sowjetischen Goliath. Der 'Weiße Tod' Simo Häyhä hat über 500 Rote erschossen. Wir werden verlieren, aber wir verkaufen unser Leben teuer.",
-                        "source": "Väinö Linna: \"Unter dem Nordstern\", finnisches Kriegsarchiv; Carl Gustaf Mannerheim: Erinnerungen, Atlantis Verlag 1952",
-                        "context": "Winterkrieg 1939/40"
-                },
-                {
-                        "id": "heinrich_kluglein_1939",
-                        "name": "Heinrich Klüglein",
-                        "title": "Wehrmacht-Soldat, Polen",
-                        "coords": [
-                                52.0,
-                                21.0
-                        ],
-                        "location": "Wehrmacht-Soldat, Polen",
-                        "faction": "axis",
-                        "quote": "Vor einundzwanzig Jahren, am 26.06.1918, wurde ich zum ersten Mal eingezogen.",
-                        "fullQuote": "Vor einundzwanzig Jahren, am 26.06.1918, wurde ich zum ersten Mal eingezogen und war bis zum 30.11.18 Soldat, seither habe ich keine Uniform getragen, aber jetzt ist es wieder soweit. Ich dachte, es würde wie 1914 werden - schnell vorbei, siegreich nach Hause. Die Not der Bevölkerung ist inzwischen groß geworden, man sieht auf den Straßen Pferdekadaver, aus denen Fleischstücke herausgeschnitten sind. Schon in Polen wurde mir klar, dass dieser Krieg anders ist - brutaler, gnadenloser.",
-                        "source": "Deutsches Tagebucharchiv Emmendingen; Sammlung Heinrich Klüglein; Feldpostbriefe-Sammlung Museum Berlin-Karlshorst",
-                        "context": "Zeitzeugen-Perspektive 1939"
-                }
-        ],
-        "1940": [
-                {
-                        "id": "winston_churchill_1940",
-                        "name": "Winston Churchill",
-                        "title": "Britischer Premierminister, London",
-                        "coords": [
-                                51.499,
-                                -0.124
-                        ],
-                        "location": "Britischer Premierminister, London",
-                        "faction": "allies",
-                        "quote": "We shall defend our island, whatever the cost may be.",
-                        "fullQuote": "We shall defend our island, whatever the cost may be. We shall fight on the beaches, we shall fight on the landing grounds, we shall never surrender.",
-                        "source": "House of Commons Debates, 4. Juni 1940",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "joseph_goebbels_1940",
-                        "name": "Joseph Goebbels",
-                        "title": "Reichspropagandaminister, Berlin",
-                        "coords": [
-                                52.52,
-                                13.405
-                        ],
-                        "location": "Reichspropagandaminister, Berlin",
-                        "faction": "axis",
-                        "quote": "Frankreich wird innerhalb weniger Wochen fallen.",
-                        "fullQuote": "Der Führer entwickelt mir seine Pläne: heute früh um 5.15 h werden Dänemark und Norwegen militärisch besetzt... Verhalten die Könige sich honett, können sie bleiben. Aber die beiden Länder geben wir nie wieder heraus. Die Operationen verlaufen besser als erwartet, unsere Wehrmacht ist unaufhaltsam. Frankreich wird innerhalb weniger Wochen fallen, dann haben wir Europa unter unserer Kontrolle. Das deutsche Volk jubelt, und zu Recht - wir schaffen ein Großreich für die nächsten tausend Jahre. 'Russland steht auf der Lauer, aber wir fürchten es nicht.' Die Sowjets werden genauso schnell zusammenbrechen wie alle anderen. Mit jedem Sieg wächst das Vertrauen in die Vorsehung und in den Führer.",
-                        "source": "Elke Fröhlich (Hrsg.): \"Die Tagebücher von Joseph Goebbels\", K.G. Saur Verlag, München 1998-2008",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "charles_de_gaulle_1940",
-                        "name": "Charles de Gaulle",
-                        "title": "Französischer General, London",
-                        "coords": [
-                                51.495,
-                                -0.13
-                        ],
-                        "location": "Französischer General, London",
-                        "faction": "allies",
-                        "quote": "La France a perdu une bataille! Mais la France n'a pas perdu la guerre!",
-                        "fullQuote": "La France a perdu une bataille! Mais la France n'a pas perdu la guerre! Ich spreche vom freien London aus zu allen Franzosen.",
-                        "source": "BBC Archives, 18. Juni 1940; Charles de Gaulle: \"Mémoires de guerre\"",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "vyacheslav_molotov_1940",
-                        "name": "Vyacheslav Molotov",
-                        "title": "Sowjetischer Außenminister, Moskau",
-                        "coords": [
-                                55.77,
-                                37.65
-                        ],
-                        "location": "Sowjetischer Außenminister, Moskau",
-                        "faction": "axis",
-                        "quote": "Die Sowjetunion und Deutschland teilen sich Europa auf.",
-                        "fullQuote": "Die Sowjetunion und Deutschland teilen sich Europa auf. Die baltischen Staaten sind jetzt sowjetisch, Deutschland beherrscht den Westen. Unser Pakt hält.",
-                        "source": "Vyacheslav Molotov: Gespräche mit Felix Chuev; RGASPI Archives",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "hideki_tojo_1940",
-                        "name": "Hideki Tojo",
-                        "title": "Japanischer Kriegsminister, Tokio",
-                        "coords": [
-                                35.68,
-                                139.67
-                        ],
-                        "location": "Japanischer Kriegsminister, Tokio",
-                        "faction": "axis",
-                        "quote": "Japan tritt dem Dreimächtepakt bei.",
-                        "fullQuote": "Japan tritt dem Dreimächtepakt bei. Deutschland, Italien und Japan - die Achsenmächte werden die Welt unter sich aufteilen. Asien gehört Japan.",
-                        "source": "Hideki Tojo: Aufzeichnungen; Japanisches Nationalarchiv",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "wendell_willkie_1940",
-                        "name": "Wendell Willkie",
-                        "title": "US-Präsidentschaftskandidat, Amerika",
-                        "coords": [
-                                39.0,
-                                -77.5
-                        ],
-                        "location": "US-Präsidentschaftskandidat, Amerika",
-                        "faction": "allies",
-                        "quote": "Amerika darf nicht isoliert bleiben.",
-                        "fullQuote": "Amerika darf nicht isoliert bleiben. Roosevelt hat recht - wir müssen den Alliierten helfen. Lend-Lease ist der richtige Weg, auch wenn ich sein Gegner bin.",
-                        "source": "Wendell Willkie: \"One World\"; Republican Party Archives",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "mary_thompson_1940",
-                        "name": "Mary Thompson",
-                        "title": "Londoner Sekretärin",
-                        "coords": [
-                                51.5074,
-                                -0.1278
-                        ],
-                        "location": "Londoner Sekretärin",
-                        "faction": "allies",
-                        "quote": "Die Sirenen heulen schon wieder, das ist der dritte Alarm heute.",
-                        "fullQuote": "Die Sirenen heulen schon wieder, das ist der dritte Alarm heute. Wir rennen in die U-Bahn-Station, dort sind Hunderte von Menschen mit Decken und Koffern. 'Never in the field of human conflict was so much owed by so many to so few', sagte Churchill über unsere Piloten, aber ich frage mich, wie lange sie noch durchhalten können. Die deutschen Bomber kommen jeden Tag, manchmal bei Tageslicht, manchmal nachts. Gestern wurde das Haus meiner Nachbarin getroffen - sie und ihre beiden Kinder sind tot. 'We shall defend our island, whatever the cost may be', aber der Preis wird immer höher. Die Regale in den Geschäften sind fast leer, Fleisch gibt es nur auf Marken. Trotzdem singen wir in den Kellern 'We'll meet again' und halten zusammen.",
-                        "source": "Mass Observation Archive, Sussex University; Virginia Woolf: Tagebücher 1940/41; Imperial War Museum London, Oral History Collection",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "giuseppe_rossi_1940",
-                        "name": "Giuseppe Rossi",
-                        "title": "Italienischer Lehrer, Rom",
-                        "coords": [
-                                41.9028,
-                                12.4964
-                        ],
-                        "location": "Italienischer Lehrer, Rom",
-                        "faction": "axis",
-                        "quote": "'Popolo italiano! Correte alle armi!'",
-                        "fullQuote": "'Popolo italiano! Correte alle armi!' - Mussolini erklärt den Krieg an der Seite Deutschlands. Das italienische Volk soll zu den Waffen eilen, aber ich sehe nur müde Gesichter auf den Straßen. Wir sind nicht bereit für diesen Krieg - unsere Armee hat schlechte Ausrüstung, die Wirtschaft ist nach Äthiopien erschöpft. In Griechenland werden unsere Soldaten von den Bergbauern geschlagen, das ist eine Demütigung. Die deutschen 'Freunde' müssen uns ständig helfen, wir sind der schwache Partner im Bündnis. Die Bombenangriffe der Alliierten beginnen 1940, Turin und Mailand brennen. Die Rationierung wird immer strenger - Brot, Fleisch, Öl, alles ist knapp. 'Vinceremo!' - Wir werden siegen, so steht es an den Wänden, aber niemand glaubt mehr daran.",
-                        "source": "Archivio Centrale dello Stato, Rom; Istituto Nazionale per la Storia del Movimento di Liberazione in Italia",
-                        "context": "Zeitzeugen-Perspektive 1940"
-                },
-                {
-                        "id": "betty_williams_1940",
-                        "name": "Betty Williams",
-                        "title": "US-Fabrikarbeiterin, Detroit",
-                        "coords": [
-                                42.3314,
-                                -83.0458
-                        ],
-                        "location": "US-Fabrikarbeiterin, Detroit",
-                        "faction": "allies",
-                        "quote": "'A date which will live in infamy'",
-                        "fullQuote": "'A date which will live in infamy' - so nannte Roosevelt den 7. Dezember, und er hat recht. Pearl Harbor hat alles verändert, Amerika ist im Krieg! Mein Verlobter Tommy meldet sich freiwillig zur Navy, ich gehe in die Rüstungsfabrik. 'We can do it!' steht auf den Postern - wir Frauen bauen jetzt Bomber und Panzer. Rosie the Riveter ist unser Vorbild, 'Keep 'em Flying' unser Schlachtruf. Rationierung von allem - Benzin, Fleisch, Zucker, aber das ist unser Beitrag zum Sieg. 'Remember Pearl Harbor!' rufen die Soldaten, wenn sie zur Verschiffung marschieren. Die japanischen Amerikaner werden in Lager gesperrt - das ist nicht richtig, aber die Angst ist groß. Die Fabrik läuft rund um die Uhr, wir schaffen 50.000 Flugzeuge im Jahr - 'The Arsenal of Democracy', wie Roosevelt sagt.",
-                        "source": "Rosie the Riveter Trust; National Archives II; Smithsonian National Museum of American History",
-                        "context": "Zeitzeugen-Perspektive 1941-42"
-                }
-        ],
-        "1941": [
-                {
-                        "id": "tatjana_wassiljewa_1941",
-                        "name": "Tatjana Wassiljewa",
-                        "title": "Sowjetische Lehrerin, Moskau",
-                        "coords": [
-                                55.76,
-                                37.62
-                        ],
-                        "location": "Sowjetische Lehrerin, Moskau",
-                        "faction": "allies",
-                        "quote": "Die faschistischen Bestien haben unser sozialistisches Vaterland überfallen!",
-                        "fullQuote": "Am 22. Juni um 4 Uhr morgens wecken uns die Sirenen - die faschistischen Bestien haben unser sozialistisches Vaterland überfallen! Genosse Stalin spricht am 3. Juli im Radio: 'Unser Volk muss furchtlos sein im Kampf und selbstlos in den Krieg gegen die faschistischen Versklavler ziehen.' Wir alle sind bereit zu kämpfen und zu sterben für die Sowjetunion! Die deutschen Bomber fliegen über Moskau, aber unser Wille ist ungebrochen. Meine Schüler werden evakuiert, ich melde mich freiwillig zum Sanitätsdienst. Millionen Kameraden marschieren an die Front - für Mütterchen Russland, für den Kommunismus! Die Fabriken werden nach Sibirien verlegt, jeder Sowjetbürger wird zur Waffe gegen die Eindringlinge. 'Stirb, aber weiche nicht zurück!' Das ist unser Schwur.",
-                        "source": "RGASPI Moskau, Fond 644; Catherine Merridale: \"Ivan's War\", Metropolitan Books 2006",
-                        "context": "Zeitzeugen-Perspektive 1941"
-                },
-                {
-                        "id": "heinrich_himmler_1941",
-                        "name": "Heinrich Himmler",
-                        "title": "SS-Reichsführer, Deutschland",
-                        "coords": [
-                                52.53,
-                                13.42
-                        ],
-                        "location": "SS-Reichsführer, Deutschland",
-                        "faction": "axis",
-                        "quote": "Der Ostfeldzug ist ein Vernichtungskrieg.",
-                        "fullQuote": "Der Ostfeldzug ist ein Vernichtungskrieg. Die slawischen Untermenschen müssen versklavt oder eliminiert werden. Die SS wird die Säuberung durchführen.",
-                        "source": "Heinrich Himmler: Reden; Bundesarchiv Berlin; Yad Vashem Archives",
-                        "context": "Zeitzeugen-Perspektive 1941"
-                },
-                {
-                        "id": "hiroshi_yamamoto_1941",
-                        "name": "Hiroshi Yamamoto",
-                        "title": "Japanischer Beamter, Tokio",
-                        "coords": [
-                                35.6762,
-                                139.6503
-                        ],
-                        "location": "Japanischer Beamter, Tokio",
-                        "faction": "axis",
-                        "quote": "Pearl Harbor ist zerstört!",
-                        "fullQuote": "'Heute früh um 3:19 Uhr (Tokio-Zeit) haben unsere Streitkräfte im westlichen Pazifik mit den amerikanischen und britischen Streitkräften den Kampf begonnen.' So verkündet es das Radio am 8. Dezember. Pearl Harbor ist zerstört, unsere Fliegerhelden haben einen glorreichen Sieg errungen! Die ganze Stadt ist in Aufruhr, überall flattern die Fahnen mit der aufgehenden Sonne. 'Banzai! Tennō heika banzai!' - Zehntausend Jahre dem Kaiser! Die Zeitungen berichten von versenkten amerikanischen Schlachtschiffen, das ganze Reich jubelt. Endlich schlagen wir zurück gegen die Amerikaner, die uns mit ihren Embargos erdrosseln wollten. Aber mein Nachbar, ein alter Marineoffizier, ist nachdenklich: 'Wir haben einen schlafenden Riesen geweckt', sagt er leise.",
-                        "source": "Nationalarchiv Japan; Gordon Prange: \"At Dawn We Slept\", McGraw-Hill 1981; Akira Iriye: \"The Origins of the Second World War in Asia and the Pacific\"",
-                        "context": "Zeitzeugen-Perspektive 1941"
-                },
-                {
-                        "id": "anthony_eden_1941",
-                        "name": "Anthony Eden",
-                        "title": "Britischer Außenminister, London",
-                        "coords": [
-                                51.52,
-                                -0.15
-                        ],
-                        "location": "Britischer Außenminister, London",
-                        "faction": "allies",
-                        "quote": "Die Sowjetunion ist jetzt unser Verbündeter.",
-                        "fullQuote": "Die Sowjetunion ist jetzt unser Verbündeter. Churchill sagt: \"Wenn Hitler die Hölle überfallen würde, würde ich im Unterhaus ein gutes Wort für den Teufel einlegen.\"",
-                        "source": "Anthony Eden: \"The Reckoning\"; Foreign Office War Records",
-                        "context": "Zeitzeugen-Perspektive 1941"
-                },
-                {
-                        "id": "henri_giraud_1941",
-                        "name": "Henri Giraud",
-                        "title": "Französischer General, Algerien",
-                        "coords": [
-                                36.77,
-                                3.06
-                        ],
-                        "location": "Französischer General, Algerien",
-                        "faction": "allies",
-                        "quote": "Freies Frankreich kämpft weiter.",
-                        "fullQuote": "Freies Frankreich kämpft weiter. In Nordafrika, mit der Résistance, überall wo die Trikolore noch weht. Vichy ist nicht Frankreich.",
-                        "source": "Henri Giraud: Mémoires; Service Historique de la Défense",
-                        "context": "Zeitzeugen-Perspektive 1941"
-                },
-                {
-                        "id": "harry_hopkins_1941",
-                        "name": "Harry Hopkins",
-                        "title": "US-Präsidentenberater, Washington",
-                        "coords": [
-                                38.92,
-                                -77.05
-                        ],
-                        "location": "US-Präsidentenberater, Washington",
-                        "faction": "allies",
-                        "quote": "Amerika wird das Arsenal der Demokratie.",
-                        "fullQuote": "Amerika wird das Arsenal der Demokratie. Lend-Lease liefert Waffen an alle, die Hitler bekämpfen. Pearl Harbor hat uns in den Krieg gezwungen - jetzt kämpfen wir richtig mit.",
-                        "source": "Harry Hopkins Papers; Robert Sherwood: \"Roosevelt and Hopkins\"",
-                        "context": "Zeitzeugen-Perspektive 1941"
-                },
-                {
-                        "id": "anne_frank_1942",
-                        "name": "Anne Frank",
-                        "title": "Jüdisches Mädchen im Versteck, Amsterdam",
-                        "coords": [
-                                52.375,
-                                4.8833
-                        ],
-                        "location": "Jüdisches Mädchen im Versteck, Amsterdam",
-                        "faction": "allies",
-                        "quote": "Liebe Kitty! Zwischen Sonntag morgen und heute scheinen Jahre zu liegen.",
-                        "fullQuote": "Liebe Kitty! Zwischen Sonntag morgen und heute scheinen Jahre zu liegen. Es ist unheimlich viel geschehen. Es ist, als wäre die Erde verwandelt. Aber Kitty, ich lebe noch... Das Versteck wird zu unserem ganzen Leben - acht Menschen auf engstem Raum, jeden Tag die Angst vor Entdeckung. Die Nachrichten von draußen sind schrecklich: Deportationen, Razzia, Menschen verschwinden spurlos. An einem Tag lachen wir über das Komische an unserer Untertauchsituation, aber am nächsten Tag, an viel mehr Tagen, haben wir Angst, und man kann die Spannung und die Verzweiflung auf unseren Gesichtern lesen. Manchmal streiten wir wegen Kleinigkeiten, aber eigentlich halten wir zusammen. Ich träume davon, wieder zur Schule zu gehen und Journalistin zu werden.",
-                        "source": "Anne Frank Haus Amsterdam; \"Das Tagebuch der Anne Frank\", Fischer Verlag; NIOD Institut für Kriegs-, Holocaust- und Genozidstudien",
-                        "context": "Zeitzeugen-Perspektive 1942-44"
-                },
-                {
-                        "id": "sarah_goldberg_1942",
-                        "name": "Sarah Goldberg",
-                        "title": "Jüdische Familie aus Wien",
-                        "coords": [
-                                48.2082,
-                                16.3738
-                        ],
-                        "location": "Jüdische Familie aus Wien",
-                        "faction": "allies",
-                        "quote": "'Sammeltransport - sofort mitfahren!'",
-                        "fullQuote": "'Sammeltransport - sofort mitfahren!' steht auf der Karte, die heute morgen gekommen ist. Mama weint, Papa versucht stark zu sein, aber seine Hände zittern. Wir dürfen nur 50 Kilogramm Gepäck mitnehmen - unser ganzes Leben in zwei Koffern. 'Umsiedlung nach Osten' nennen sie es, aber die Nachbarn flüstern von schrecklichen Dingen. Am Aspangbahnhof stehen Hunderte von Menschen mit Koffern und weinenden Kindern. Die SS-Männer treiben uns in die Viehwaggons - 80 Menschen in einen Wagon, kein Platz zum Sitzen. 'Warum tun sie uns das an?' fragt die kleine Ruth, aber niemand kann es erklären. Drei Tage fahren wir ohne Wasser und Brot, der Gestank wird unerträglich.",
-                        "source": "Dokumentationsarchiv des österreichischen Widerstandes (DÖW); Yad Vashem Archives; Deportationslisten Aspangbahnhof Wien",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                }
-        ],
-        "1942": [
-                {
-                        "id": "wassili_saizew_1942",
-                        "name": "Wassili Saizew",
-                        "title": "Sowjetischer Scharfschütze, Stalingrad",
-                        "coords": [
-                                48.705,
-                                44.515
-                        ],
-                        "location": "Sowjetischer Scharfschütze, Stalingrad",
-                        "faction": "allies",
-                        "quote": "Jeder Schuss ein Deutscher weniger.",
-                        "fullQuote": "225 bestätigte Treffer in Stalingrad. Mit meiner Mosin-Nagant jage ich deutsche Offiziere in den Ruinen der Stadt. Stalin selbst hat meinen Namen gehört.",
-                        "source": "Wassili Saizew: \"Aufzeichnungen eines russischen Scharfschützen\"",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "friedrich_paulus_1942",
-                        "name": "Friedrich Paulus",
-                        "title": "Deutscher Generalfeldmarschall, Stalingrad",
-                        "coords": [
-                                48.708,
-                                44.513
-                        ],
-                        "location": "Deutscher Generalfeldmarschall, Stalingrad",
-                        "faction": "axis",
-                        "quote": "Stalingrad ist das Grab der deutschen Wehrmacht.",
-                        "fullQuote": "Die 6. Armee ist vernichtet, 200.000 Deutsche sind tot oder verwundet. Hitler befahl \"Kampf bis zum letzten Mann\", aber ich kann nicht mehr zusehen.",
-                        "source": "Walter Görlitz: \"Paulus und Stalingrad\", Athenäum 1964",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "chester_nimitz_1942",
-                        "name": "Chester Nimitz",
-                        "title": "US-Admiral, Pazifik",
-                        "coords": [
-                                21.31,
-                                -157.86
-                        ],
-                        "location": "US-Admiral, Pazifik",
-                        "faction": "allies",
-                        "quote": "Midway hat den Pazifikkrieg gewendet.",
-                        "fullQuote": "Midway hat den Pazifikkrieg gewendet. Vier japanische Flugzeugträger versenkt, ihre beste Piloten tot. Von nun an sind wir in der Offensive.",
-                        "source": "Chester Nimitz: War Diaries; US Naval Archives",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "isoroku_yamamoto_1942",
-                        "name": "Isoroku Yamamoto",
-                        "title": "Japanischer Admiral, Pazifik",
-                        "coords": [
-                                35.0,
-                                140.0
-                        ],
-                        "location": "Japanischer Admiral, Pazifik",
-                        "faction": "axis",
-                        "quote": "Ich fürchte, wir haben einen schlafenden Riesen geweckt.",
-                        "fullQuote": "Ich fürchte, wir haben einen schlafenden Riesen geweckt. Pearl Harbor war ein taktischer Erfolg, aber Amerika wird zurückschlagen. Midway zeigt - der Krieg wendet sich gegen uns.",
-                        "source": "Isoroku Yamamoto: Aufzeichnungen; Japanische Marine-Archive",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "bernard_montgomery_1942",
-                        "name": "Bernard Montgomery",
-                        "title": "Britischer General, El Alamein",
-                        "coords": [
-                                30.8497,
-                                28.955
-                        ],
-                        "location": "Britischer General, El Alamein",
-                        "faction": "allies",
-                        "quote": "Wir werden Rommel in der Wüste schlagen.",
-                        "fullQuote": "Wir werden Rommel in der Wüste schlagen. El Alamein ist der Wendepunkt - von hier aus rollen wir das Afrika-Korps auf. \"Before Alamein we never had a victory. After Alamein we never had a defeat.\"",
-                        "source": "Bernard Montgomery: Memoirs; Imperial War Museum",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "henri_giraud_1942",
-                        "name": "Henri Giraud",
-                        "title": "Französischer General, Nordafrika",
-                        "coords": [
-                                36.8,
-                                3.1
-                        ],
-                        "location": "Französischer General, Nordafrika",
-                        "faction": "allies",
-                        "quote": "Freies Frankreich kämpft an allen Fronten.",
-                        "fullQuote": "Freies Frankreich kämpft an allen Fronten. In Nordafrika, mit der Résistance in der Heimat. Vichy kollaboriert, aber das wahre Frankreich widersteht.",
-                        "source": "Henri Giraud: Mémoires; Service Historique de la Défense",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "hans_muller_1942",
-                        "name": "Hans Müller",
-                        "title": "Afrika-Korps Panzerfahrer, El Alamein",
-                        "coords": [
-                                30.8417,
-                                28.9544
-                        ],
-                        "location": "Afrika-Korps Panzerfahrer, El Alamein",
-                        "faction": "axis",
-                        "quote": "'Panzer rollen in Afrika vor!'",
-                        "fullQuote": "'Panzer rollen in Afrika vor!' So singt das ganze Afrika-Korps, wenn wir durch die Wüste preschen. Generalfeldmarschall Rommel ist ein Genie - der 'Wüstenfuchs' überlistet die Briten immer wieder. Bei 50 Grad am Tag und Frost in der Nacht kämpfen wir für das Großdeutsche Reich. Sand in den Motoren, Wassermangel, Ruhr - aber der deutsche Soldat hält durch! 'Mit Rommel zum Suez-Kanal!' rufen wir, als wir Tobruk erobern. Die Tommys sind tapfer, aber unsere Panzer sind besser. Die Versorgung wird immer schwieriger - die Royal Navy versenkt unsere Nachschubschiffe im Mittelmeer. Bei El Alamein ist Schluss - Montgomery hat mehr Männer und Material.",
-                        "source": "Bundesarchiv-Militärarchiv Freiburg; Erwin Rommel: \"Krieg ohne Hass\", Heidenheimer Verlagsanstalt 1950; Afrika-Korps Veteranenverbände",
-                        "context": "Zeitzeugen-Perspektive 1941-42"
-                },
-                {
-                        "id": "bill_mckenzie_1942",
-                        "name": "Bill McKenzie",
-                        "title": "Australischer Soldat, Kokoda Trail",
-                        "coords": [
-                                -9.478,
-                                147.151
-                        ],
-                        "location": "Australischer Soldat, Kokoda Trail",
-                        "faction": "allies",
-                        "quote": "Die Japaner sind nur 50 Kilometer von Port Moresby entfernt",
-                        "fullQuote": "Die Japaner sind nur 50 Kilometer von Port Moresby entfernt - das bedeutet Australien ist in akuter Gefahr! Der Kokoda Trail ist die Hölle: Malaria, Dysenterie, Schlamm und tropische Hitze. Unsere Jungs fallen wie die Fliegen, aber wir geben nicht auf. 'She'll be right, mate!' sagen wir, auch wenn alles hoffnungslos scheint. Die Nips sind Dschungelkämpfer, aber wir Aussies sind zäher. Darwin wurde bombardiert, Sydney von U-Booten angegriffen - der Krieg ist zu uns gekommen! Meine Mum in Brisbane hat Angst vor einer japanischen Invasion. Wir sind das letzte Bollwerk zwischen den gelben Teufeln und der Heimat. Die Fuzzy Wuzzy Angels [einheimische Papua] helfen uns, tragen unsere Verwundeten.",
-                        "source": "Australian War Memorial Canberra; Peter Brune: \"A Bastard of a Place\", Allen & Unwin 2003; Oral History Project",
-                        "context": "Zeitzeugen-Perspektive 1942"
-                },
-                {
-                        "id": "alexej_iwanow_1942",
-                        "name": "Alexej Iwanow",
-                        "title": "Sowjetischer Kriegsgefangener, Stalag 326",
-                        "coords": [
-                                51.9139,
-                                8.6617
-                        ],
-                        "location": "Sowjetischer Kriegsgefangener, Stalag 326",
-                        "faction": "allies",
-                        "quote": "Die deutschen Schweine geben uns 200 Gramm Brot am Tag",
-                        "fullQuote": "Die deutschen Schweine geben uns 200 Gramm Brot am Tag - das reicht nicht mal für eine Ratte! Wir sind 50.000 sowjetische Kriegsgefangene in diesem Lager, aber jeden Tag werden es weniger. My umiraem kak sobaki - Wir sterben wie Hunde. Hunger ist unser ständiger Begleiter, wir träumen nur noch vom Essen. Die Deutschen nennen uns Untermenschen - Untermenschen. Aber wir sind Söhne der Sowjetunion! Kameraden essen Gras, Baumrinde, alles was sie finden können. Die Leichen stapeln sich wie Holzscheite. Keine Pakete vom Roten Kreuz, keine Hoffnung auf Austausch. Hitler will uns alle vernichten lassen. Von 3,3 Millionen gefangenen Rotarmisten werden 2 Millionen den Krieg nicht überleben.",
-                        "source": "Bundesarchiv Berlin; Christian Streit: \"Keine Kameraden\", DVA 1978; Gedenkstätte Stalag 326 Stukenbrock",
-                        "context": "Zeitzeugen-Perspektive 1941-42"
-                },
-                {
-                        "id": "dr_ruth_cohn_1943",
-                        "name": "Dr. Ruth Cohn",
-                        "title": "Deutsche Jüdin, Theresienstadt",
-                        "coords": [
-                                50.5107,
-                                14.1509
-                        ],
-                        "location": "Deutsche Jüdin, Theresienstadt",
-                        "faction": "allies",
-                        "quote": "Theresienstadt ist keine 'jüdische Siedlung'",
-                        "fullQuote": "Theresienstadt ist keine 'jüdische Siedlung', wie die SS behauptet - es ist ein Wartesaal des Todes. Als deutsche Jüdin trage ich den gelben Stern mit dem Wort 'Jude', aber in meinem Herzen bin ich immer noch Deutsche. Wie konnte mein Vaterland, das Land von Goethe und Schiller, zu diesem werden? Die Transporte nach Osten kommen regelmäßig - 'Umsiedlung' nennen sie es, aber wir wissen, was das bedeutet. Treblinka, Sobibor, Auschwitz - diese Namen flüstern wir in der Dunkelheit. Ich behandle kranke Kinder mit Aspirin-Tabletten, die ich teile wie Hostien. Mein Vater war Oberarzt in Hamburg, mein Bruder fiel 1917 für das Vaterland. Aber das zählt nicht mehr - wir sind nur noch Nummern. 15.000 Kinder gingen durch Theresienstadt, nur 100 überlebten.",
-                        "source": "Gedenkstätte Theresienstadt; Leo Baeck Institute New York; Yad Vashem Jerusalem",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                }
-        ],
-        "1943": [
-                {
-                        "id": "claus_von_stauffenberg_1943",
-                        "name": "Claus von Stauffenberg",
-                        "title": "Deutscher Offizier, Tunesien",
-                        "coords": [
-                                36.8,
-                                10.2
-                        ],
-                        "location": "Deutscher Offizier, Tunesien",
-                        "faction": "allies",
-                        "quote": "Deutschland braucht einen Systemwechsel.",
-                        "fullQuote": "Deutschland braucht einen Systemwechsel. Hitler führt unser Vaterland in den Abgrund. Wir Offiziere müssen handeln, bevor es zu spät ist.",
-                        "source": "Peter Hoffmann: \"Widerstand, Staatsstreich, Attentat\", Piper 1985",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "heinz_guderian_1943",
-                        "name": "Heinz Guderian",
-                        "title": "Deutscher Panzergeneral, Kursk",
-                        "coords": [
-                                51.7,
-                                36.2
-                        ],
-                        "location": "Deutscher Panzergeneral, Kursk",
-                        "faction": "axis",
-                        "quote": "Operation Zitadelle ist gescheitert.",
-                        "fullQuote": "Operation Zitadelle ist gescheitert. Unsere letzten Panzerreserven sind aufgerieben. Die Initiative ist für immer an die Russen übergegangen.",
-                        "source": "Heinz Guderian: \"Erinnerungen eines Soldaten\"; Bundesarchiv",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "georgi_zhukov_1943",
-                        "name": "Georgi Zhukov",
-                        "title": "Sowjetischer Marschall, Kursk",
-                        "coords": [
-                                51.75,
-                                36.25
-                        ],
-                        "location": "Sowjetischer Marschall, Kursk",
-                        "faction": "allies",
-                        "quote": "Kursk ist der Anfang vom Ende für Hitler.",
-                        "fullQuote": "Kursk ist der Anfang vom Ende für Hitler. Die größte Panzerschlacht der Geschichte ist gewonnen. Von nun an marschieren wir nur noch westwärts - nach Berlin.",
-                        "source": "Georgi Zhukov: \"Erinnerungen und Gedanken\"; Sowjetische Militärarchive",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "dwight_eisenhower_1943",
-                        "name": "Dwight Eisenhower",
-                        "title": "US-General, Sizilien",
-                        "coords": [
-                                37.5,
-                                14.0
-                        ],
-                        "location": "US-General, Sizilien",
-                        "faction": "allies",
-                        "quote": "Die Invasion Siziliens öffnet die zweite Front.",
-                        "fullQuote": "Die Invasion Siziliens öffnet die zweite Front. Italien wankt, Mussolini ist gestürzt. Deutschland muss jetzt an drei Fronten kämpfen.",
-                        "source": "Dwight Eisenhower: \"Crusade in Europe\"; National Archives",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "alan_brooke_1943",
-                        "name": "Alan Brooke",
-                        "title": "Britischer Generalstabschef, London",
-                        "coords": [
-                                51.51,
-                                -0.14
-                        ],
-                        "location": "Britischer Generalstabschef, London",
-                        "faction": "allies",
-                        "quote": "Die Achse zerfällt vor unseren Augen.",
-                        "fullQuote": "Die Achse zerfällt vor unseren Augen. Italien kapituliert, Japan ist in der Defensive, Deutschland steht allein. Churchill hatte recht - das Ende ist in Sicht.",
-                        "source": "Alan Brooke: War Diaries; Imperial War Museum",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "jean_moulin_1943",
-                        "name": "Jean Moulin",
-                        "title": "Französischer Widerstandsführer, Lyon",
-                        "coords": [
-                                45.764,
-                                4.835
-                        ],
-                        "location": "Französischer Widerstandsführer, Lyon",
-                        "faction": "allies",
-                        "quote": "Die Résistance vereint alle Franzosen.",
-                        "fullQuote": "Die Résistance vereint alle Franzosen gegen die Besatzung. Kommunisten, Gaullisten, Sozialisten - alle kämpfen zusammen. Klaus Barbie jagt mich, aber die Befreiung naht.",
-                        "source": "Daniel Cordier: \"Alias Caracalla\"; Memorial Jean Moulin",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "pierre_moreau_1943",
-                        "name": "Pierre Moreau",
-                        "title": "Französischer Widerstandskämpfer, Lyon",
-                        "coords": [
-                                45.76,
-                                4.83
-                        ],
-                        "location": "Französischer Widerstandskämpfer, Lyon",
-                        "faction": "allies",
-                        "quote": "'Il faut que la France continue'",
-                        "fullQuote": "'Il faut que la France continue', sagte de Gaulle 1940, und wir folgen seinem Ruf. In der Nacht sprengen wir die Bahnschienen, über die die Deutschen ihre Truppen transportieren. Mein Codename ist 'Renard' - der Fuchs - und ich führe eine kleine Gruppe von Saboteuren. Die Gestapo sucht uns überall, drei meiner Kameraden wurden schon verhaftet und gefoltert. 'L'union fait la force' - Einigkeit macht stark, das ist unser Motto. Wir drucken heimlich Flugblätter: 'Français! Réveillez-vous!' - Franzosen, wacht auf! Die Milice von Pétain jagt uns wie Verbrecher, aber wir sind die wahren Patrioten. In den Wälder der Ardèche verstecken sich die Maquisards - junge Männer, die nicht nach Deutschland zur Zwangsarbeit wollen.",
-                        "source": "Archives départementales du Rhône; Centre d'Histoire de la Résistance et de la Déportation Lyon; Fondation de la Résistance Paris",
-                        "context": "Zeitzeugen-Perspektive 1943-44"
-                },
-                {
-                        "id": "milovan_djordjevic_1943",
-                        "name": "Milovan Đorđević",
-                        "title": "Jugoslawischer Partisan, Bosnien",
-                        "coords": [
-                                44.0,
-                                18.0
-                        ],
-                        "location": "Jugoslawischer Partisan, Bosnien",
-                        "faction": "allies",
-                        "quote": "'Smrt fašizmu, sloboda narodu!'",
-                        "fullQuote": "'Smrt fašizmu, sloboda narodu!' - Tod dem Faschismus, Freiheit dem Volk! Das ist unser Partisanen-Gruß. Genosse Tito führt uns gegen Deutsche, Italiener und die Četnik-Verräter. In den Bergen Bosniens kennen wir jeden Pfad, jeden Bunker. Die Wehrmacht brennt unsere Dörfer nieder, erschießt für jeden getöteten Deutschen hundert Geiseln. Aber wir kämpfen weiter! Brüderlichkeit und Einheit - Serben, Kroaten, Bosnier, alle vereint gegen die Besatzer. Unsere Frauen kämpfen Seite an Seite mit uns, tragen Gewehre wie die Männer. Die Deutschen fürchten uns mehr als die reguläre Armee. Wir sprengen Brücken, überfallen Nachschubkonvois, befreien ganze Landstriche.",
-                        "source": "Vojni Arhiv Belgrad; Milovan Djilas: \"Wartime\", Harcourt Brace Jovanovich 1977; Tito Memorial Center",
-                        "context": "Zeitzeugen-Perspektive 1943"
-                },
-                {
-                        "id": "park_min_ho_1943",
-                        "name": "Park Min-ho",
-                        "title": "Koreanischer Zwangsarbeiter",
-                        "coords": [
-                                33.0,
-                                130.0
-                        ],
-                        "location": "Koreanischer Zwangsarbeiter",
-                        "faction": "allies",
-                        "quote": "Sie kamen in unser Dorf und sagten, wir müssten für das 'Große Ostasiatische Reich' arbeiten.",
-                        "fullQuote": "Sie kamen in unser Dorf und sagten, wir müssten für das 'Große Ostasiatische Reich' arbeiten. Aber es war Lüge - wir wurden wie Sklaven behandelt. In den Kohleminen von Kyushu arbeiten wir sechzehn Stunden täglich, ohne genug zu essen. Die japanischen Aufseher schlagen uns mit Bambusrohren, wenn wir zu langsam sind. 'Chōsenjin!' - Koreaner! spucken sie aus, als wären wir Dreck. Unsere Namen wurden durch japanische ersetzt, unsere Sprache ist verboten. Wer Koreanisch spricht, wird bestraft. Meine jüngere Schwester wurde als 'Trostfrau' verschleppt - ich weiß nicht, ob sie noch lebt. 780.000 Koreaner wurden nach Japan deportiert, Millionen weitere in Korea zur Zwangsarbeit gezwungen.",
-                        "source": "Center for Historical Truth and Justice Seoul; Yoshimi Yoshiaki: \"Comfort Women\", Columbia University Press 2000",
-                        "context": "Zeitzeugen-Perspektive 1942-45"
-                }
-        ],
-        "1944": [
-                {
-                        "id": "erwin_rommel_1944",
-                        "name": "Erwin Rommel",
-                        "title": "Deutscher Feldmarschall, Atlantikwall",
-                        "coords": [
-                                49.4,
-                                -0.9
-                        ],
-                        "location": "Deutscher Feldmarschall, Atlantikwall",
-                        "faction": "axis",
-                        "quote": "Die Invasion wird am Strand entschieden.",
-                        "fullQuote": "Die Invasion wird am Strand entschieden. Wenn wir sie nicht in den ersten 24 Stunden ins Meer werfen, ist der Krieg verloren. Aber unsere Stellungen sind noch nicht fertig.",
-                        "source": "Erwin Rommel: Aufzeichnungen; Bundesarchiv Freiburg",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "omar_bradley_1944",
-                        "name": "Omar Bradley",
-                        "title": "US-General, D-Day Normandie",
-                        "coords": [
-                                49.37,
-                                -0.86
-                        ],
-                        "location": "US-General, D-Day Normandie",
-                        "faction": "allies",
-                        "quote": "Heute öffnen wir die zweite Front in Europa.",
-                        "fullQuote": "Heute öffnen wir die zweite Front in Europa. 150.000 Mann landen in der Normandie. Hitler kämpft jetzt an allen Fronten. Der Countdown zum Ende läuft.",
-                        "source": "Omar Bradley: \"A Soldier's Story\"; US Army Archives",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "ivan_konev_1944",
-                        "name": "Ivan Konev",
-                        "title": "Sowjetischer Marschall, Operation Bagration",
-                        "coords": [
-                                53.9,
-                                27.6
-                        ],
-                        "location": "Sowjetischer Marschall, Operation Bagration",
-                        "faction": "allies",
-                        "quote": "Bagration zerschlägt die Heeresgruppe Mitte.",
-                        "fullQuote": "Bagration zerschlägt die Heeresgruppe Mitte. 350.000 Deutsche gefangen oder tot. Der Weg nach Polen und Deutschland ist frei. Berlin rückt näher.",
-                        "source": "Ivan Konev: \"Das Jahr 1944\"; Sowjetische Militärarchive",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "arthur_harris_1944",
-                        "name": "Arthur Harris",
-                        "title": "Britischer Luftmarschall, London",
-                        "coords": [
-                                51.52,
-                                -0.13
-                        ],
-                        "location": "Britischer Luftmarschall, London",
-                        "faction": "allies",
-                        "quote": "Bomber Command zerstört deutsche Städte.",
-                        "fullQuote": "Bomber Command zerstört deutsche Städte Nacht für Nacht. Hamburg, Köln, Essen - alles brennt. Die deutsche Moral wird gebrochen werden.",
-                        "source": "Arthur Harris: \"Bomber Offensive\"; RAF Museum",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "philippe_leclerc_1944",
-                        "name": "Philippe Leclerc",
-                        "title": "Französischer General, Paris",
-                        "coords": [
-                                48.857,
-                                2.295
-                        ],
-                        "location": "Französischer General, Paris",
-                        "faction": "allies",
-                        "quote": "Paris ist befreit!",
-                        "fullQuote": "Paris ist befreit! Die 2. Panzerdivision marschiert in die Stadt ein. De Gaulles Traum wird wahr - Frankreich befreit sich selbst. \"Vive la France!\"",
-                        "source": "Philippe Leclerc: Mémoires; Service Historique",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "hideki_tojo_1944",
-                        "name": "Hideki Tojo",
-                        "title": "Japanischer Premierminister, Tokio",
-                        "coords": [
-                                35.685,
-                                139.655
-                        ],
-                        "location": "Japanischer Premierminister, Tokio",
-                        "faction": "axis",
-                        "quote": "Die Philippinen sind verloren.",
-                        "fullQuote": "Die Philippinen sind verloren, Saipan gefallen. Die amerikanischen B-29 können jetzt Japan bombardieren. Ich muss zurücktreten - der Krieg ist nicht mehr zu gewinnen.",
-                        "source": "Hideki Tojo: Verhör-Protokolle; Tokio War Crimes Tribunal",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "robert_johnson_1944",
-                        "name": "Robert Johnson",
-                        "title": "US-Infanterist, D-Day Normandie",
-                        "coords": [
-                                49.36,
-                                -0.85
-                        ],
-                        "location": "US-Infanterist, D-Day Normandie",
-                        "faction": "allies",
-                        "quote": "Das Landungsboot schaukelt wie verrückt, mir ist kotzübel",
-                        "fullQuote": "Das Landungsboot schaukelt wie verrückt, mir ist kotzübel, aber in zwei Stunden sind wir in Frankreich. 'This is it, boys - the big one!' ruft Sergeant Murphy. Hitler wird heute seinen schwarzen Tag erleben! Die Kameraden beten, manche schreiben letzte Briefe an ihre Liebsten zu Hause. Um 6:30 Uhr stürmen wir den Strand - Omaha Beach, Sektor Dog Green. Die deutsche MG-42 rattert wie der Teufel, überall fallen Jungs ins Wasser. 'Medic! Medic!' schreit jemand, aber wir müssen vorwärts. Die Atlantikwall-Bunker spucken Feuer, aber wir sind mehr - viel mehr als die Krauts. Oberst Taylor brüllt: 'There are only two kinds of people staying on this beach - the dead and those who are gonna die!' Also klettern wir die Klippen hoch.",
-                        "source": "National Archives College Park; Stephen E. Ambrose: \"D-Day\", Simon & Schuster 1994; Eisenhower Presidential Library",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "tadeusz_otrebski_1944",
-                        "name": "Tadeusz Otrębski",
-                        "title": "Polnischer Widerstandskämpfer, Warschauer Aufstand",
-                        "coords": [
-                                52.2297,
-                                21.0122
-                        ],
-                        "location": "Polnischer Widerstandskämpfer, Warschauer Aufstand",
-                        "faction": "allies",
-                        "quote": "Als am 1. August 1944 der Warschauer Aufstand begann",
-                        "fullQuote": "Als am 1. August 1944 der Warschauer Aufstand begann, war ich vom ersten Tag an dabei. Mit 18 Jahren kämpfe ich für die Freiheit Polens, wie meine Väter vor mir. Die ersten Tage waren voller Hoffnung - wir eroberten ganze Stadtteile, die Deutschen wichen zurück. Barrikaden aus Kopfsteinen, selbstgemachte Waffen, der Mut der Verzweiflung. Die Zivilisten unterstützen uns, bringen Essen und Munition, verstecken Verwundete. Aber die deutschen Verstärkungen kommen, Stukas bombardieren die Stadt, SS-Einheiten brennen Häuser nieder. Am 3. Oktober musste meine Einheit kapitulieren. Wir hatten gehofft, dass die Rote Armee helfen würde, aber Stalin ließ uns fallen. Warschau ist zerstört, aber unser Geist ist ungebrochen.",
-                        "source": "Archiwum Akt Nowych Warszawa; Museum des Warschauer Aufstands; Norman Davies: \"Rising '44\", Macmillan 2003",
-                        "context": "Zeitzeugen-Perspektive 1944"
-                },
-                {
-                        "id": "jan_bazuin_1944",
-                        "name": "Jan Bazuin",
-                        "title": "Niederländischer Zivilist, Hungerwinter",
-                        "coords": [
-                                52.3676,
-                                4.9041
-                        ],
-                        "location": "Niederländischer Zivilist, Hungerwinter",
-                        "faction": "allies",
-                        "quote": "'Heute kaum etwas Besonderes'",
-                        "fullQuote": "'Heute kaum etwas Besonderes', schreibe ich in mein Tagebuch, obwohl Hunger, Kälte und Fliegeralarm für mich im fünften Jahr des Krieges zum Alltag geworden sind. Die Deutschen requirieren alles - Fahrräder, Lebensmittel, sogar junge Männer für den Arbeitseinsatz. Meine Familie versteckt mich auf dem Dachboden, damit ich nicht verschleppt werde. 'Ich muss überleben und ich muss daran denken, dass es gut ausgehen wird. Ich darf den Kopf nicht hängen lassen.' Der Hungerwinter 1944/45 ist besonders hart - wir kochen Tulpenzwiebeln und sammeln Brennholz aus den Parks. Nachts hören wir die alliierten Bomber auf dem Weg nach Deutschland, das gibt Hoffnung. Die Widerstandsgruppen werden mutiger, überall tauchen Orange-Fahnen auf.",
-                        "source": "NIOD Institut Amsterdam; Nederlands Instituut voor Oorlogsdocumentatie; Henri van der Zee: \"The Hunger Winter\", University of Nebraska Press 1998",
-                        "context": "Zeitzeugen-Perspektive 1944/45"
-                },
-                {
-                        "id": "victor_klemperer_1945",
-                        "name": "Victor Klemperer",
-                        "title": "Jüdischer Romanist, Dresden",
-                        "coords": [
-                                51.0504,
-                                13.7373
-                        ],
-                        "location": "Jüdischer Romanist, Dresden",
-                        "faction": "allies",
-                        "quote": "Jeder hat vor jedem Angst.",
-                        "fullQuote": "Jeder hat vor jedem Angst. Ein Kuriosum aber gab Frau Stühler gestern preis: Durchgegebener Befehl an arische Häuser, keinem bettelnden Soldaten Brot oder gar Quartier zu geben, aufdringliche geradezu herauszujagen. Die Stimmung ist gedrückt, überall Flüchtlinge aus dem Osten, die Stadt ist überfüllt. Als Jude mit gelbem Stern lebe ich in ständiger Todesangst - jeden Tag kann die Deportation kommen. Am Abend dieses 13. Februar brach die Katastrophe über Dresden herein: die Bomben fielen, die Häuser stürzten, der Phosphor strömte, die brennenden Balken krachten auf arische und nichtarische Köpfe, und derselbe Feuersturm riß Jud und Christ in den Tod; wen aber von den etwa 70 Sternträgern diese Nacht verschonte, dem bedeutete sie Errettung, denn im allgemeinen Chaos konnte er der Gestapo entkommen.",
-                        "source": "Victor Klemperer: \"Ich will Zeugnis ablegen bis zum letzten\", Aufbau-Verlag 1995; Sächsische Landesbibliothek Dresden",
-                        "context": "Zeitzeugen-Perspektive Februar 1945"
-                }
-        ],
-        "1945": [
-                {
-                        "id": "adolf_hitler_1945",
-                        "name": "Adolf Hitler",
-                        "title": "Deutscher Führer, Führerbunker Berlin",
-                        "coords": [
-                                52.513,
-                                13.381
-                        ],
-                        "location": "Deutscher Führer, Führerbunker Berlin",
-                        "faction": "axis",
-                        "quote": "Wenn der Krieg verloren geht, wird auch das Volk verloren sein.",
-                        "fullQuote": "Wenn der Krieg verloren geht, wird auch das Volk verloren sein. Es wird seinem Schicksal überlassen. Denn es hat sich als das schwächere erwiesen. Das deutsche Volk hat versagt.",
-                        "source": "Albert Speer: \"Erinnerungen\"; Führerbunker-Aufzeichnungen",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "joseph_stalin_1945",
-                        "name": "Joseph Stalin",
-                        "title": "Sowjetischer Diktator, Jalta",
-                        "coords": [
-                                44.495,
-                                34.166
-                        ],
-                        "location": "Sowjetischer Diktator, Jalta",
-                        "faction": "allies",
-                        "quote": "Die Rote Armee wird Berlin einnehmen.",
-                        "fullQuote": "Die Rote Armee wird Berlin einnehmen. Roosevelt und Churchill können den Westen haben - Osteuropa gehört der Sowjetunion. Der Kapitalismus ist am Ende.",
-                        "source": "Stalin: Jalta-Konferenz Protokolle; RGASPI Archives",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "harry_truman_1945",
-                        "name": "Harry Truman",
-                        "title": "US-Präsident, Washington",
-                        "coords": [
-                                38.91,
-                                -77.04
-                        ],
-                        "location": "US-Präsident, Washington",
-                        "faction": "allies",
-                        "quote": "Die Atombombe wird den Krieg beenden.",
-                        "fullQuote": "Die Atombombe wird den Krieg beenden. Hiroshima und Nagasaki zeigen Japans Führung die Aussichtslosigkeit. Millionen amerikanische Leben werden gerettet.",
-                        "source": "Harry Truman: Memoirs; Truman Presidential Library",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "clement_attlee_1945",
-                        "name": "Clement Attlee",
-                        "title": "Britischer Premierminister, London",
-                        "coords": [
-                                51.515,
-                                -0.135
-                        ],
-                        "location": "Britischer Premierminister, London",
-                        "faction": "allies",
-                        "quote": "Großbritannien hat gesiegt, aber zu welchem Preis?",
-                        "fullQuote": "Großbritannien hat gesiegt, aber zu welchem Preis? Das Empire ist bankrott, Amerika und Russland sind die neuen Supermächte. Churchill ist abgewählt - das Volk will Sozialreformen.",
-                        "source": "Clement Attlee: \"As It Happened\"; Labour Party Archives",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "charles_de_gaulle_1945",
-                        "name": "Charles de Gaulle",
-                        "title": "Französischer Präsident, Paris",
-                        "coords": [
-                                48.862,
-                                2.337
-                        ],
-                        "location": "Französischer Präsident, Paris",
-                        "faction": "allies",
-                        "quote": "Frankreich ist wieder eine Großmacht.",
-                        "fullQuote": "Frankreich ist wieder eine Großmacht. Wir sitzen am Siegertisch, haben eine Besatzungszone in Deutschland. Die Résistance hat uns gerettet, de Gaulle hat uns geeint.",
-                        "source": "Charles de Gaulle: \"Mémoires de guerre\"; Archives Nationales",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "emperor_hirohito_1945",
-                        "name": "Emperor Hirohito",
-                        "title": "Japanischer Kaiser, Tokio",
-                        "coords": [
-                                35.678,
-                                139.668
-                        ],
-                        "location": "Japanischer Kaiser, Tokio",
-                        "faction": "axis",
-                        "quote": "Wir müssen das Unerträgliche ertragen.",
-                        "fullQuote": "Wir müssen das Unerträgliche ertragen und das Unduldbare dulden. Die Kriegslage hat sich nicht zu Japans Gunsten entwickelt. Wir kapitulieren.",
-                        "source": "Hirohito: Kapitulations-Rede 15. August 1945; Imperial Archives",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "anonyma_1945",
-                        "name": "Anonyma (Marta Hillers)",
-                        "title": "Berliner Journalistin, Kriegsende",
-                        "coords": [
-                                52.52,
-                                13.405
-                        ],
-                        "location": "Berliner Journalistin, Kriegsende",
-                        "faction": "allies",
-                        "quote": "Die Rote Armee ist in Berlin, das Grauen beginnt.",
-                        "fullQuote": "Die Rote Armee ist in Berlin, das Grauen beginnt. Überall plündernde Soldaten, Frauen werden gejagt und vergewaltigt. 'Diese kollektive Massenform der Vergewaltigung wird auch kollektiv überwunden werden. Jede hilft jeder, indem sie darüber spricht, sich Luft macht, der anderen Gelegenheit gibt, sich Luft zu machen, das Erlittene auszuspeien.' Wir Frauen entwickeln Strategien: Eine nimmt sich einen Offizier als Schutz vor den einfachen Soldaten. Der Hunger treibt uns auf die Straße, wir tauschen Schmuck gegen Kartoffeln. Die Stadt liegt in Trümmern, überall Leichen und der Geruch des Todes. 'Bin erst mal für den Mann verdorben', denke ich, als mein Freund nach monatelanger Gefangenschaft zurückkehrt. 'Ihr seid schamlos wie die Hündinnen geworden, ihr alle miteinander hier im Haus', sagt er voller Verachtung.",
-                        "source": "Anonyma: \"Eine Frau in Berlin\", Eichborn Verlag 2003; Landesarchiv Berlin",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                },
-                {
-                        "id": "michiko_tanaka_1945",
-                        "name": "Michiko Tanaka",
-                        "title": "Japanische Schülerin, Hiroshima",
-                        "coords": [
-                                34.3853,
-                                132.4553
-                        ],
-                        "location": "Japanische Schülerin, Hiroshima",
-                        "faction": "axis",
-                        "quote": "Um 8:15 Uhr verwandelt sich die Welt in Licht und Feuer.",
-                        "fullQuote": "Um 8:15 Uhr verwandelt sich die Welt in Licht und Feuer. 'Pika-don!' nennen es die Menschen später - Blitz und Donner. Aber ich sehe nur das weiße Licht, dann Dunkelheit. Als ich aufwache, ist Hiroshima verschwunden. Wo unser Haus stand, sind nur noch Schatten an der Wand. Mama? Papa? Ich rufe, aber niemand antwortet. Menschen wandeln wie Geister umher, ihre Haut hängt in Fetzen herab. Das Wasser im Fluss kocht, tote Fische treiben an der Oberfläche. Die B-29 'Enola Gay' hat mit einem einzigen Bombenabwurf mehr Menschen getötet als alle Luftangriffe zuvor. 100.000 sterben sofort, weitere werden später an den Strahlenschäden sterben. Japan muss kapitulieren - wir können nicht gegen die Sonne kämpfen.",
-                        "source": "Hiroshima Peace Memorial Museum; John Hersey: \"Hiroshima\", Knopf 1946; Hibakusha-Zeitzeugenberichte",
-                        "context": "Zeitzeugen-Perspektive 6. August 1945"
-                },
-                {
-                        "id": "jack_sullivan_1945",
-                        "name": "Jack Sullivan",
-                        "title": "US-Marine, Iwo Jima",
-                        "coords": [
-                                24.79,
-                                141.32
-                        ],
-                        "location": "US-Marine, Iwo Jima",
-                        "faction": "allies",
-                        "quote": "Der schwarze Sand von Iwo Jima klebt an allem",
-                        "fullQuote": "Der schwarze Sand von Iwo Jima klebt an allem, vermischt mit Blut und Tränen. 'Semper Fi!' brüllen wir, wenn wieder ein Kamerad fällt. Die Japaner kämpfen bis zum letzten Mann, jeder Bunker muss einzeln ausgeräuchert werden. Flammenwerfer, Granaten, Bajonett - das ist unser Handwerk hier in der Hölle. Mount Suribachi thront über uns wie ein Totenschädel, aber wir werden diese verdammte Flagge dort oben hissen! 36 Tage kämpfen wir schon um diese 20 Quadratkilometer Vulkangestein. Die Kamikaze-Flieger stürzen sich auf unsere Schiffe, aber wir Marines halten durch. Dies ist das Tor nach Japan - und wir werden es aufbrechen, koste es was es wolle!",
-                        "source": "US Marine Corps History Division; James Bradley: \"Flags of Our Fathers\", Bantam 2000; National Archives II",
-                        "context": "Zeitzeugen-Perspektive Februar 1945"
-                },
-                {
-                        "id": "heinrich_kluglein_1945",
-                        "name": "Heinrich Klüglein",
-                        "title": "Wehrmacht-Soldat, Kriegsende",
-                        "coords": [
-                                52.52,
-                                13.405
-                        ],
-                        "location": "Wehrmacht-Soldat, Kriegsende",
-                        "faction": "axis",
-                        "quote": "Die Jahre vergingen, aus Blitzkrieg wurde Stellungskrieg",
-                        "fullQuote": "Die Jahre vergingen, aus Blitzkrieg wurde Stellungskrieg, aus Sieg wurde Niederlage. Russland war die Hölle - Kälte, Hunger, sinnloser Tod überall. Seitdem ich keine Eintragung mehr gemacht habe, hat sich unsere Lage zusehends verschlechtert und ist jetzt ganz hoffnungslos geworden. Der Traum vom Großdeutschen Reich ist zum Albtraum geworden.",
-                        "source": "Deutsches Tagebucharchiv Emmendingen; Sammlung Heinrich Klüglein; Feldpostbriefe-Sammlung Museum Berlin-Karlshorst",
-                        "context": "Zeitzeugen-Perspektive 1945"
-                }
-        ]
+ "1937": [],
+ "1938": [
+  {
+   "id": "chamberlain_1938_10_03",
+   "name": "Neville Chamberlain",
+   "title": "Premierminister (Konservative)",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4995,
+    -0.1248
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "… eine Katastrophe abgewendet, die die Zivilisation, wie wir sie kennen, beendet hätte.",
+   "fullQuote": "Chamberlain verteidigt das Münchner Abkommen: Man habe „eine Katastrophe abgewendet, die die Zivilisation, wie wir sie kennen, beendet hätte“.<br><i>Original: “… averted a catastrophe which would have ended civilisation as we have known it”</i>",
+   "source": "House of Commons, 3. Oktober 1938, Hansard Bd. 339, Sp. 45 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1938/oct/03/prime-ministers-statement",
+   "context": "Debatte über das Münchner Abkommen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "attlee_1938_10_03",
+   "name": "Clement Attlee",
+   "title": "Oppositionsführer (Labour)",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4997,
+    -0.1252
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "Das war kein Sieg der Vernunft und der Menschlichkeit. Es war ein Sieg der rohen Gewalt.",
+   "fullQuote": "„Das war kein Sieg der Vernunft und der Menschlichkeit. Es war ein Sieg der rohen Gewalt.“<br><i>Original: “This has not been a victory for reason and humanity. It has been a victory for brute force.”</i>",
+   "source": "House of Commons, 3. Oktober 1938, Hansard Bd. 339, Sp. 51 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1938/oct/03/prime-ministers-statement",
+   "context": "Debatte über das Münchner Abkommen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "churchill_1938_10_05",
+   "name": "Winston Churchill",
+   "title": "Abgeordneter (Konservative)",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4993,
+    -0.1244
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "Das ist erst der Anfang der Abrechnung.",
+   "fullQuote": "„Das ist erst der Anfang der Abrechnung.“<br><i>Original: “This is only the beginning of the reckoning.”</i>",
+   "source": "House of Commons, 5. Oktober 1938, Hansard Bd. 339, Sp. 373 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1938/oct/05/policy-of-his-majestys-government",
+   "context": "Debatte über das Münchner Abkommen",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1939": [
+  {
+   "id": "chamberlain_1939_09_03",
+   "name": "Neville Chamberlain",
+   "title": "Premierminister (Konservative)",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4995,
+    -0.1248
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "… und folglich befindet sich dieses Land im Krieg mit Deutschland.",
+   "fullQuote": "„Eine solche Zusicherung ist bis zur gesetzten Frist nicht eingegangen, und folglich befindet sich dieses Land im Krieg mit Deutschland.“ … „Alles, wofür ich gearbeitet habe, alles, worauf ich gehofft habe, alles, woran ich in meinem öffentlichen Leben geglaubt habe, ist in Trümmer gefallen.“<br><i>Original: “No such undertaking was received by the time stipulated, and, consequently, this country is at war with Germany.” … “Everything that I have worked for, everything that I have hoped for, everything that I have believed in during my public life, has crashed into ruins.”</i>",
+   "source": "House of Commons, 3. September 1939, Hansard Bd. 351, Sp. 292 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1939/sep/03/prime-ministers-announcement",
+   "context": "Kriegserklärung nach Ablauf des Ultimatums",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "mork_1939_09_01",
+   "name": "Werner Mork (Jahrgang 1921)",
+   "title": "damals Angestellter in Bremen",
+   "location": "Bremen",
+   "coords": [
+    53.0793,
+    8.8017
+   ],
+   "faction": "axis",
+   "art": "Erinnerung, aufgeschrieben 2004",
+   "quote": "Nur bei meiner Mutter verspürte ich eine große Nervosität.",
+   "fullQuote": "Werner Mork erinnert sich an den 1. September 1939: „Nur bei meiner Mutter verspürte ich eine große Nervosität.“ Wenige Tage später meldet er sich ohne Wissen der Eltern freiwillig zur Waffen-SS; „Meine Mutter war nun voller Sorge“.<br><i>Die Erinnerung wurde über 60 Jahre später aufgeschrieben.</i>",
+   "source": "LeMO-Zeitzeugen, Deutsches Historisches Museum / Haus der Geschichte, Eintrag vom Juli 2004",
+   "url": "https://www.dhm.de/lemo/zeitzeugen/werner-mork-kriegsbeginn-am-1-september-1939",
+   "context": "Kriegsbeginn in Deutschland",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1940": [
+  {
+   "id": "churchill_1940_05_13",
+   "name": "Winston Churchill",
+   "title": "Premierminister seit 10. Mai 1940",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4995,
+    -0.1248
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "Ich habe nichts zu bieten außer Blut, Mühsal, Tränen und Schweiß.",
+   "fullQuote": "„Ich habe nichts zu bieten außer Blut, Mühsal, Tränen und Schweiß.“ … „Es ist der Sieg, der Sieg um jeden Preis, der Sieg trotz allen Schreckens, der Sieg, wie lang und hart der Weg auch sein mag; denn ohne Sieg gibt es kein Überleben.“<br><i>Original: “I have nothing to offer but blood, toil, tears and sweat.” … “It is victory, victory at all costs, victory in spite of all terror, victory, however long and hard the road may be; for without victory, there is no survival.”</i>",
+   "source": "House of Commons, 13. Mai 1940, Hansard Bd. 360, Sp. 1502 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1940/may/13/his-majestys-government-1",
+   "context": "Erste Rede als Premierminister, drei Tage nach dem deutschen Angriff im Westen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "kriegskabinett_1940_05_26",
+   "name": "Kriegskabinett: Halifax und Churchill",
+   "title": "Protokoll der Sitzungen am 26. Mai 1940",
+   "location": "Downing Street, London",
+   "coords": [
+    51.5034,
+    -0.1276
+   ],
+   "faction": "allies",
+   "art": "Sitzungsprotokoll (indirekte Rede)",
+   "quote": "Sollen wir über Mussolini nach Friedensbedingungen fragen?",
+   "fullQuote": "Außenminister Halifax hält Verhandlungen für denkbar, „wenn er [Churchill] davon überzeugt wäre, dass Dinge, die für die Unabhängigkeit dieses Landes lebenswichtig sind, unberührt blieben“. Churchill erklärt, „das Einzige, was zu tun sei, sei ihm [Hitler] zu zeigen, dass er dieses Land nicht erobern könne“.<br><i>Original: “If he was satisfied that matters vital to the independence of this country were unaffected” · “The only thing to do was to show him that he could not conquer this country”</i>",
+   "source": "War Cabinet, 26. Mai 1940, The National Archives CAB 65/13; zitiert nach The National Archives Blog „Light in the darkest hour“ · Übersetzung: eigene",
+   "url": "https://blog.nationalarchives.gov.uk/light-in-the-darkest-hour/",
+   "context": "Belgien steht vor der Kapitulation, die Armee ist bei Dünkirchen eingeschlossen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "dalton_1940_05_28",
+   "name": "Hugh Dalton",
+   "title": "Minister (Labour), Tagebuch",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4999,
+    -0.126
+   ],
+   "faction": "allies",
+   "art": "Tagebuch",
+   "quote": "Wir werden weitermachen und es ausfechten, hier oder anderswo.",
+   "fullQuote": "Dalton notiert Churchills Worte vor den Ministern am 28. Mai 1940: „Wir werden weitermachen und es ausfechten, hier oder anderswo.“ Über die Reaktion: „Niemand äußerte auch nur den leisesten Anflug von Widerspruch.“<br><i>Original: “We shall go on and we shall fight it out, here or elsewhere” · “No one expressed even the faintest flicker of dissent.”</i>",
+   "source": "Tagebuch Hugh Dalton, 28. Mai 1940; zitiert nach The National Archives Blog und International Churchill Society · Übersetzung: eigene",
+   "url": "https://winstonchurchill.org/life-of-churchill/war-leader/convinces-cabinet-to-fight-on-belgium-surrenders/",
+   "context": "Entscheidung gegen Friedensverhandlungen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "churchill_1940_06_04",
+   "name": "Winston Churchill",
+   "title": "Premierminister",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4995,
+    -0.1248
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "Wir werden niemals kapitulieren.",
+   "fullQuote": "Die Schiffe haben „über 335 000 Mann, Franzosen und Briten, aus dem Rachen von Tod und Schande“ geholt. … „Wir werden an den Stränden kämpfen, wir werden auf den Landeplätzen kämpfen, wir werden auf den Feldern und in den Straßen kämpfen, wir werden in den Hügeln kämpfen; wir werden niemals kapitulieren.“<br><i>Original: “carried over 335,000 men, French and British, out of the jaws of death and shame” … “We shall fight on the beaches, we shall fight on the landing grounds, we shall fight in the fields and in the streets, we shall fight in the hills; we shall never surrender”</i>",
+   "source": "House of Commons, 4. Juni 1940, Hansard Bd. 361, Sp. 791 und 796 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1940/jun/04/war-situation",
+   "context": "Nach der Evakuierung aus Dünkirchen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "churchill_1940_06_18",
+   "name": "Winston Churchill",
+   "title": "Premierminister",
+   "location": "Unterhaus, London",
+   "coords": [
+    51.4995,
+    -0.1248
+   ],
+   "faction": "allies",
+   "art": "Rede im Unterhaus",
+   "quote": "Dies war ihre größte Stunde.",
+   "fullQuote": "„Wir haben derzeit auf dieser Insel über eineinviertel Millionen Mann unter Waffen.“ … Man werde, wenn das Commonwealth tausend Jahre bestehe, noch sagen: „Dies war ihre größte Stunde.“<br><i>Original: “We have under arms at the present time in this island over a million and a quarter men.” … “This was their finest hour.”</i>",
+   "source": "House of Commons, 18. Juni 1940, Hansard Bd. 362, Sp. 53 und 60–61 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/commons/1940/jun/18/war-situation",
+   "context": "Frankreich bittet um Waffenstillstand",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1941": [
+  {
+   "id": "churchill_1941_06_22",
+   "name": "Winston Churchill",
+   "title": "Premierminister",
+   "location": "London (Rundfunk)",
+   "coords": [
+    51.5185,
+    -0.1438
+   ],
+   "faction": "allies",
+   "art": "Rundfunkansprache",
+   "quote": "Die russische Gefahr ist daher unsere Gefahr.",
+   "fullQuote": "„Niemand ist in den letzten fünfundzwanzig Jahren ein beständigerer Gegner des Kommunismus gewesen als ich.“ … „Jeder Mensch und jeder Staat, der gegen den Nationalsozialismus kämpft, wird unsere Hilfe haben.“ … „Die russische Gefahr ist daher unsere Gefahr und die Gefahr der Vereinigten Staaten.“<br><i>Original: “Noone has been a more consistent opponent of Communism than I have for the last twenty-five years.” … “Any man or State who fights against Nazism will have our aid.” … “The Russian danger is therefore our danger and the danger of the United States”</i>",
+   "source": "Rundfunkansprache, 22. Juni 1941, Wortlaut nach der Sammlung „Pearl Harbor History Associates“ (ibiblio); andere Abdrucke weichen im Wortlaut leicht ab · Übersetzung: eigene",
+   "url": "https://ibiblio.org/pha/timeline/410622dwp.html",
+   "context": "Am Morgen hat Deutschland die Sowjetunion angegriffen",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "stalin_1941_07_03",
+   "name": "Josef Stalin",
+   "title": "Regierungschef der Sowjetunion",
+   "location": "Moskau (Rundfunk)",
+   "coords": [
+    55.752,
+    37.6175
+   ],
+   "faction": "allies",
+   "art": "Rundfunkansprache",
+   "quote": "Unser Krieg für die Freiheit unseres Landes wird sich mit dem Kampf der Völker Europas und Amerikas vereinen.",
+   "fullQuote": "Stalin nennt „die historische Erklärung des britischen Premierministers, Herrn Churchill, über Hilfe für die Sowjetunion“ verständlich. „Unser Krieg für die Freiheit unseres Landes wird sich mit dem Kampf der Völker Europas und Amerikas vereinen.“<br><i>Englische Fassung: “the historic utterance of the British Prime Minister, Mr. Churchill, regarding aid to the Soviet Union” · “Our war for the freedom of our country will merge with the struggle of the peoples of Europe and America”</i>",
+   "source": "Rundfunkansprache, 3. Juli 1941; englische Fassung im Stalin-Archiv auf marxists.org (Übersetzer nicht genannt) · Übersetzung ins Deutsche: eigene",
+   "url": "https://www.marxists.org/reference/archive/stalin/works/1941/07/03.htm",
+   "context": "Erste Rede Stalins nach dem deutschen Angriff",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "abkommen_1941_07_12",
+   "name": "Britisch-sowjetisches Abkommen",
+   "title": "Vertragstext",
+   "location": "Moskau",
+   "coords": [
+    55.7539,
+    37.6208
+   ],
+   "faction": "allies",
+   "art": "Vertrag",
+   "quote": "Beide Regierungen verpflichten sich, einander Hilfe und Unterstützung jeder Art zu leisten.",
+   "fullQuote": "1. „Die beiden Regierungen verpflichten sich gegenseitig, einander im gegenwärtigen Krieg gegen Hitlerdeutschland Hilfe und Unterstützung jeder Art zu leisten.“ 2. Sie werden während dieses Krieges ohne gegenseitiges Einverständnis weder verhandeln noch einen Waffenstillstand oder Frieden schließen.<br><i>Original: “The two Governments mutually undertake to render each other assistance and support of all kinds in the present war against Hitlerite Germany.” · “They further undertake that during this war they will neither negotiate nor conclude an armistice or treaty of peace except by mutual agreement.”</i>",
+   "source": "Agreement between the United Kingdom and the USSR, Moskau, 12. Juli 1941; Wortlaut nach Avalon Project, Yale Law School · Übersetzung: eigene",
+   "url": "https://avalon.law.yale.edu/wwii/brsov41.asp",
+   "context": "Aus der Zusammenarbeit wird ein Bündnis",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1942": [
+  {
+   "id": "area_bombing_1942_02_14",
+   "name": "Weisung des Luftfahrtministeriums",
+   "title": "„Area Bombing Directive“ an das Bomber Command",
+   "location": "Air Ministry, London",
+   "coords": [
+    51.5128,
+    -0.121
+   ],
+   "faction": "allies",
+   "art": "Dienstanweisung",
+   "quote": "Die Angriffe auf die Moral der feindlichen Zivilbevölkerung richten, besonders der Industriearbeiter.",
+   "fullQuote": "Weisung vom 14. Februar 1942: Die Angriffe sollen sich auf „die Moral der feindlichen Zivilbevölkerung und insbesondere der Industriearbeiter“ richten. Luftmarschall Portal ergänzt am 15. Februar: Zielpunkte seien „die bebauten Gebiete, und nicht etwa die Werften oder Flugzeugfabriken“.<br><i>Original: “To focus attacks on the morale of the enemy civil population and in particular the industrial workers.” · “the aiming points will be the built up areas, and not, for instance, the dockyards or aircraft factories”</i>",
+   "source": "Air Ministry, General Directive No. 5, 14. Februar 1942 (nach Harris/Cox 1995, S. 192); Notiz Portal an Bottomley, 15. Februar 1942 (nach Porter 1998, S. 160); beides nach Wikipedia „Area bombing directive“ · Übersetzung: eigene",
+   "url": "https://en.wikipedia.org/wiki/Area_bombing_directive",
+   "context": "Beginn der Flächenbombardierung deutscher Städte",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "harris_1942_06",
+   "name": "Arthur Harris",
+   "title": "Oberbefehlshaber des Bomber Command",
+   "location": "London",
+   "coords": [
+    51.51,
+    -0.13
+   ],
+   "faction": "allies",
+   "art": "Filmaufnahme für die Wochenschau",
+   "quote": "Sie haben Wind gesät und werden nun Sturm ernten.",
+   "fullQuote": "„Die Nazis sind in diesen Krieg mit der ziemlich kindischen Vorstellung gezogen, sie würden alle anderen bombardieren …“ – „Sie haben Wind gesät und werden nun Sturm ernten.“ – „Köln, Lübeck, Rostock – das ist erst der Anfang.“<br><i>Original: “The Nazis entered this war under the rather childish delusion that they were going to bomb everybody else …” · “They sowed the wind and now they are going to reap the whirlwind.” · “Cologne, Lubeck, Rostock—Those are only just the beginning.”</i>",
+   "source": "Aufnahme der Royal Air Force Films, Juni 1942, nach dem Angriff auf Köln (30./31. Mai 1942); Wortlaut nach Air & Space Forces Magazine · Übersetzung: eigene",
+   "url": "https://www.airandspaceforces.com/article/0911keeperfile/",
+   "context": "Nach dem ersten „Tausend-Bomber-Angriff“",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1943": [
+  {
+   "id": "goebbels_1943_02_18",
+   "name": "Joseph Goebbels",
+   "title": "Reichspropagandaminister",
+   "location": "Sportpalast, Berlin",
+   "coords": [
+    52.497,
+    13.359
+   ],
+   "faction": "axis",
+   "art": "Propagandarede",
+   "quote": "Wollt ihr den totalen Krieg?!",
+   "fullQuote": "„Wollt ihr den totalen Krieg?!“ … „Wollt ihr ihn, wenn nötig, totaler und radikaler, als wir ihn uns heute überhaupt erst vorstellen können?!“<br><i>Propagandarede vor ausgewähltem Publikum, nach der Niederlage in Stalingrad. Die Tonaufnahme weicht an einigen Stellen von der gedruckten Fassung ab.</i>",
+   "source": "Rede im Berliner Sportpalast, 18. Februar 1943, gedruckte Fassung; nach Wikipedia „Sportpalast speech“",
+   "url": "https://en.wikipedia.org/wiki/Sportpalast_speech",
+   "context": "NS-Propaganda: nur zur Analyse",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "wolff_moenckeberg_1943_08_24",
+   "name": "Mathilde Wolff-Mönckeberg",
+   "title": "Hamburgerin, Brief an ihre Kinder",
+   "location": "Hamburg",
+   "coords": [
+    53.5511,
+    9.9937
+   ],
+   "faction": "axis",
+   "art": "Brief (damals nicht abgeschickt)",
+   "quote": "Ich habe noch nie solche richtige Todesangst empfunden, solche Todesnähe.",
+   "fullQuote": "„Ich habe noch nie solche richtige Todesangst empfunden, solche Todesnähe.“ … „Eltern und Kinder wurden im Gedränge auseinandergerissen und fanden sich nicht wieder“.",
+   "source": "Brief vom 24. August 1943; in: Mathilde Wolff-Mönckeberg, Briefe, die sie nicht erreichten, hg. von Ruth Evans, Hamburg 1980, S. 91–92; nach German History in Documents and Images (GHDI)",
+   "url": "https://germanhistorydocs.org/de/deutschland-nationalsozialismus-1933-1945/brief-der-augenzeugin-mathilde-wolff-moenckeberg-ueber-die-folgen-des-hamburger-feuersturms-24-august-1943",
+   "context": "Nach den Luftangriffen auf Hamburg im Juli 1943 („Operation Gomorrha“)",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1944": [
+  {
+   "id": "bell_1944_02_09",
+   "name": "George Bell",
+   "title": "Bischof von Chichester, Oberhaus",
+   "location": "House of Lords, London",
+   "coords": [
+    51.4987,
+    -0.1251
+   ],
+   "faction": "allies",
+   "art": "Rede im Oberhaus",
+   "quote": "Die Politik ist Auslöschung, offen eingestanden. Das ist keine zu rechtfertigende Kriegshandlung.",
+   "fullQuote": "„Hitler ist ein Barbar.“ … „Eine ganze Stadt auszulöschen, weil bestimmte Teile militärische und industrielle Einrichtungen enthalten, heißt, das Gleichgewicht aufzugeben.“ … „Die Politik ist Auslöschung, offen eingestanden. Das ist keine zu rechtfertigende Kriegshandlung.“<br><i>Original: “Hitler is a barbarian.” … “To obliterate a whole town because certain portions contain military and industrial establishments is to reject the balance.” … “The policy is obliteration, openly acknowledged. That is not a justifiable act of war.”</i>",
+   "source": "House of Lords, 9. Februar 1944, Hansard Bd. 130, Sp. 739–741 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/lords/1944/feb/09/bombing-policy",
+   "context": "Debatte über die Bombenpolitik",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "cranborne_1944_02_09",
+   "name": "Viscount Cranborne",
+   "title": "für die Regierung, Oberhaus",
+   "location": "House of Lords, London",
+   "coords": [
+    51.4985,
+    -0.1255
+   ],
+   "faction": "allies",
+   "art": "Rede im Oberhaus",
+   "quote": "Der einzige Weg, dieses Grauen zu beenden, ist, unsere Feinde schnell und vollständig zu besiegen.",
+   "fullQuote": "„Die harte, unausweichliche Tatsache ist, dass Krieg etwas Schreckliches ist und nicht ohne Leid geführt werden kann“. Die großen Zentren der Verwaltung, der Produktion und des Verkehrs seien „in einem totalen Krieg selbst militärische Ziele“. „Der einzige Weg, dieses Grauen zu beenden, ist, unsere Feinde schnell und vollständig zu besiegen und einen dauerhaften Frieden herzustellen.“<br><i>Original: “The hard, inescapable fact is that war is a horrible thing, and that it cannot be carried on without suffering” · “the great centres of administration, of production and of communication are themselves military targets in a total war.” · “The only way to end this horror is to beat our enemies rapidly and completely and restore enduring peace.”</i>",
+   "source": "House of Lords, 9. Februar 1944, Hansard Bd. 130, Sp. 751–754 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/lords/1944/feb/09/bombing-policy",
+   "context": "Antwort der Regierung auf Bischof Bell",
+   "pruefung": "geprüft Oktober 2026"
+  },
+  {
+   "id": "lang_1944_02_09",
+   "name": "Cosmo Lang",
+   "title": "früherer Erzbischof von Canterbury, Oberhaus",
+   "location": "House of Lords, London",
+   "coords": [
+    51.4989,
+    -0.1247
+   ],
+   "faction": "allies",
+   "art": "Rede im Oberhaus",
+   "quote": "Ein Wettstreit, den wir nur gewinnen können, wenn wir das Beste und Edelste unserer Traditionen opfern.",
+   "fullQuote": "„Ich glaube nicht, dass man sagen kann, diese Politik sei bei diesen offenbar gezielten Versuchen, ganze Städte zu zerstören, eingehalten worden“. Vergeltung sei „ein Wettstreit, den wir nur gewinnen können, wenn wir das Beste und Edelste in den Traditionen unseres Volkes opfern“.<br><i>Original: “I do not think it can be said that that policy has been adhered to in these apparently deliberate attempts to destroy whole cities” · “It is a competition in which we can win only by the sacrifice of what has been best and noblest in the traditions of our race.”</i>",
+   "source": "House of Lords, 9. Februar 1944, Hansard Bd. 130, Sp. 748–749 · Übersetzung: eigene",
+   "url": "https://api.parliament.uk/historic-hansard/lords/1944/feb/09/bombing-policy",
+   "context": "Debatte über die Bombenpolitik",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ],
+ "1945": [
+  {
+   "id": "hirohito_1945_08_15",
+   "name": "Kaiser Hirohito",
+   "title": "Kaiser von Japan",
+   "location": "Tokio (Rundfunk)",
+   "coords": [
+    35.6852,
+    139.7528
+   ],
+   "faction": "axis",
+   "art": "Rundfunkansprache",
+   "quote": "… das Unerträgliche ertragen und das Unduldbare erdulden.",
+   "fullQuote": "Die Kriegslage habe sich „nicht unbedingt zu Japans Vorteil entwickelt“. Man müsse „das Unerträgliche ertragen und das Unduldbare erdulden“.<br><i>Offizielle englische Übersetzung von 1945: “the war situation has developed not necessarily to Japan's advantage” · “enduring the unendurable and suffering what is insufferable”</i>",
+   "source": "Rundfunkansprache („Gyokuon-hōsō“), 15. August 1945; offizielle englische Übersetzung, aufgezeichnet von der Federal Communications Commission, nach Atomic Heritage Foundation · Übersetzung ins Deutsche: eigene",
+   "url": "https://ahf.nuclearmuseum.org/ahf/key-documents/jewel-voice-broadcast/",
+   "context": "Japan nimmt die Kapitulation an",
+   "pruefung": "geprüft Oktober 2026"
+  }
+ ]
 };
 
     console.log('Zeitzeugen geladen:', Object.keys(warData).reduce((sum, year) => sum + warData[year].length, 0));
@@ -5415,12 +4607,11 @@ L.Marker.include({
         year: 1937,
         title: "Massaker von Nanking",
         coords: [32.0603, 118.7969],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Nanking_Massacre_Picture_1.jpg/300px-Nanking_Massacre_Picture_1.jpg",
         description: "Japanische Truppen erobern die chinesische Hauptstadt Nanking am 13. Dezember 1937. In den folgenden sechs Wochen ermorden sie geschätzte 200.000-300.000 chinesische Zivilisten und Kriegsgefangene.",
         perspectives: [
-          "Chinesische Zivilisten: 'Die Stadt war voller Panik. Familien wurden getrennt, Menschen versteckten sich wo sie konnten.'",
-          "Japanische Soldaten: 'Befehle von oben - wir sollten keine Gefangenen machen.'", 
-          "Internationale Beobachter: 'Was wir hier sehen, ist eines der schlimmsten Kriegsverbrechen der modernen Geschichte.'"
+          "Chinesische Zivilisten",
+          "Japanische Soldaten", 
+          "Internationale Beobachter"
         ],
         agency: "Japanische Militärführung trägt volle Verantwortung, chinesische Zivilisten waren völlig schutzlos.",
         sources: ["Iris Chang: The Rape of Nanking", "Augenzeugenberichte der Internationalen Sicherheitszone"]
@@ -5429,12 +4620,11 @@ L.Marker.include({
         year: 1940,
         title: "Blitzkrieg im Westen & Fall Frankreichs",
         coords: [48.8566, 2.3522],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Bundesarchiv_Bild_101I-126-0347-09A%2C_Paris%2C_Deutsche_Truppen_am_Arc_de_Triomphe.jpg/300px-Bundesarchiv_Bild_101I-126-0347-09A%2C_Paris%2C_Deutsche_Truppen_am_Arc_de_Triomphe.jpg",
         description: "Deutsche Truppen marschieren am 14. Juni 1940 in Paris ein. Frankreich, Europas führende Militärmacht, kapituliert nach nur 6 Wochen.",
         perspectives: [
-          "Deutsche Soldaten: 'Das Herz Frankreichs in unseren Händen - der Blitzkrieg hat funktioniert!'",
-          "Französische Zivilisten: 'Paris ist wie ausgestorben - was wird aus unserem schönen Frankreich?'",
-          "Britische Beobachter: 'Die Schlacht ist verloren - wir stehen allein gegen Hitler.'"
+          "Deutsche Soldaten",
+          "Französische Zivilisten",
+          "Britische Beobachter"
         ],
         agency: "Deutsche Blitzkrieg-Strategie überrascht Franzosen völlig, französische Führung kapituliert.",
         sources: ["Wehrmacht-Kriegstagebücher", "Archiv der Stadt Paris", "Zeitzeugenberichte"]
@@ -5443,11 +4633,10 @@ L.Marker.include({
         year: 1940,
         title: "Londoner Blitz",
         coords: [51.5074, -0.1278],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/St_Paul%27s_Survives.jpg/300px-St_Paul%27s_Survives.jpg",
-        description: "Deutsche Luftwaffe bombardiert London 8 Monate lang. 43.000 Zivilisten sterben, über 1 Million Häuser werden zerstört.",
+        description: "Deutsche Luftwaffe bombardiert London 8 Monate lang. 43.000 Zivilisten sterben, über eine Million Wohnungen werden zerstört oder beschädigt.",
         perspectives: [
-          "Londoner Zivilisten: 'Die Sirenen heulen jede Nacht - aber London gibt nicht auf!'",
-          "Deutsche Piloten: 'Vergeltung für die Angriffe auf Berlin - Terror gegen Terror'",
+          "Londoner Zivilisten",
+          "Deutsche Piloten",
           "Churchill: 'St. Paul's muss um jeden Preis gerettet werden - Symbol unseres Durchhaltewillens'"
         ],
         agency: "Hitler befiehlt Terrorangriffe auf Zivilisten, Londoner Bevölkerung zeigt enormen Widerstandsgeist.",
@@ -5457,26 +4646,24 @@ L.Marker.include({
         year: 1941,
         title: "Operation Barbarossa",
         coords: [55.7558, 37.6176], 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Bundesarchiv_Bild_146-1981-149-34A%2C_Russland%2C_Panzer_vor_brennendem_Dorf.jpg/300px-Bundesarchiv_Bild_146-1981-149-34A%2C_Russland%2C_Panzer_vor_brennendem_Dorf.jpg",
         description: "Deutschland bricht den Hitler-Stalin-Pakt und greift die Sowjetunion mit über 3 Millionen Soldaten an. Der rassenideologische Vernichtungskrieg beginnt.",
         perspectives: [
-          "Deutsche Soldaten: 'Endlich können wir den Bolschewismus besiegen - der Führer verspricht Sieg bis Weihnachten'",
-          "Sowjetische Soldaten: 'Stalin hat uns nicht vorbereitet - wir müssen das Vaterland verteidigen'",
-          "Sowjetische Zivilisten: 'Die Faschisten brennen unsere Dörfer nieder und erschießen Frauen und Kinder'"
+          "Deutsche Soldaten",
+          "Sowjetische Soldaten",
+          "Sowjetische Zivilisten"
         ],
-        agency: "Hitler entscheidet gegen Rat seiner Generäle, sowjetische Zivilbevölkerung wird Opfer systematischer Vernichtung.",
+        agency: "Hitler und die Wehrmachtführung planen den Angriff als rassenideologischen Vernichtungskrieg; die sowjetische Zivilbevölkerung wird Opfer systematischer Gewalt.",
         sources: ["Deutsche Heeresdokumente", "Sowjetische Kriegsarchive", "Zeitzeugen-Interviews"]
       },
       {
         year: 1941,
         title: "Pearl Harbor",
         coords: [21.3099, -157.8581],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/USS_Arizona_Pearl_Harbor_HI_-_Dec_7%2C_1941.jpg/300px-USS_Arizona_Pearl_Harbor_HI_-_Dec_7%2C_1941.jpg",
         description: "Japan greift am 7. Dezember 1941 Pearl Harbor an. 2400 Amerikaner sterben. USA treten in den Weltkrieg ein.",
         perspectives: [
-          "US-Soldaten: 'Es war ein Sonntagmorgen - plötzlich fielen Bomben vom Himmel'",
-          "Japanische Piloten: 'Wir haben den Feind überrascht - für den Kaiser!'",
-          "US-Zivilisten: '95% von uns waren gegen den Krieg, aber nach Pearl Harbor...'"
+          "US-Soldaten",
+          "Japanische Piloten",
+          "US-Zivilisten"
         ],
         agency: "Japanische Militärführung plant Überraschungsangriff, US-Isolation ist beendet.",
         sources: ["US-Navy Archive", "Roosevelt Presidential Library", "Zeitzeugen-Interviews"]
@@ -5485,12 +4672,11 @@ L.Marker.include({
         year: 1942,
         title: "Holocaust - Ghettos und Vernichtung",
         coords: [51.7592, 19.4550],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Lodz_ghetto_children.jpg/300px-Lodz_ghetto_children.jpg",
         description: "Systematische Vernichtung der europäischen Juden erreicht ihren Höhepunkt. Ghettos werden aufgelöst, Deportationen beginnen massenhaft.",
         perspectives: [
-          "Ghetto-Bewohner: 'Seit 1939 haben wir immer gehungert - jetzt deportieren sie uns'",
-          "Deutsche Täter: 'Die Endlösung der Judenfrage - Befehl ist Befehl'",
-          "Lokale Bevölkerung: 'Wir haben es gewusst, aber was konnten wir tun?'"
+          "Ghetto-Bewohner",
+          "Deutsche Täter",
+          "Lokale Bevölkerung"
         ],
         agency: "NS-Führung plant systematischen Völkermord, jüdische Bevölkerung völlig rechtlos.",
         sources: ["USC Shoah Foundation", "Yad Vashem Archive", "Ghetto-Chroniken"]
@@ -5499,12 +4685,11 @@ L.Marker.include({
         year: 1943,
         title: "Stalingrad - Wendepunkt",
         coords: [48.7080, 44.5133],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/RIAN_archive_44732_Soviet_soldiers_attack_house.jpg/300px-RIAN_archive_44732_Soviet_soldiers_attack_house.jpg",
-        description: "Deutsche 6. Armee kapituliert in Stalingrad. 800.000 Achsen-Soldaten tot oder gefangen. Wendepunkt des Krieges.",
+        description: "Deutsche 6. Armee kapituliert in Stalingrad. Hunderttausende Soldaten der Achsenmächte sind tot, verwundet oder gefangen. Wendepunkt des Krieges.",
         perspectives: [
-          "Deutsche Soldaten: 'Wir kämpfen verzweifelt im Kessel - Hitler hat uns verraten'",
-          "Sowjetische Verteidiger: 'Jeder Meter wird mit Blut verteidigt - kein Schritt zurück!'",
-          "Deutsche Zivilisten: 'Drei Tage Staatstrauer - zum ersten Mal zweifeln wir am Endsieg'"
+          "Deutsche Soldaten",
+          "Sowjetische Verteidiger",
+          "Deutsche Zivilisten"
         ],
         agency: "Hitler befiehlt sinnloses Ausharren, sowjetische Führung plant erfolgreiche Einkesselung.",
         sources: ["Bundesarchiv-Militärarchiv", "RGASPI Moskau", "Soldatenbriefe"]
@@ -5513,12 +4698,11 @@ L.Marker.include({
         year: 1944,
         title: "D-Day Normandie",
         coords: [49.3723, -0.7037],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Into_the_Jaws_of_Death_23-0455M_edit.jpg/300px-Into_the_Jaws_of_Death_23-0455M_edit.jpg",
         description: "Alliierte landen am 6. Juni 1944 in der Normandie. 150.000 Soldaten eröffnen die zweite Front.",
         perspectives: [
-          "Alliierte Soldaten: 'This is it, boys - Hitler wird seinen schwarzen Tag erleben!'",
-          "Deutsche Verteidiger: 'Der Atlantikwall wird sie aufhalten - aber sie sind so viele...'",
-          "Französische Zivilisten: 'Die Befreiung kommt - aber zu welchem Preis?'"
+          "Alliierte Soldaten",
+          "Deutsche Verteidiger",
+          "Französische Zivilisten"
         ],
         agency: "Alliierte planen größte Amphibien-Operation, deutsche Führung reagiert zu langsam.",
         sources: ["National Archives US", "Bundesarchiv", "Zeitzeugenberichte"]
@@ -5527,12 +4711,11 @@ L.Marker.include({
         year: 1944,
         title: "Warschauer Aufstand & Massaker",
         coords: [52.2356, 20.9784],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Warsaw_Uprising_-_Hospital.jpg/300px-Warsaw_Uprising_-_Hospital.jpg",
-        description: "Warschauer Aufstand dauert 63 Tage. Deutsche SS ermordet in Wola 50.000 Zivilisten - größtes Kriegsverbrechen in Europa.",
+        description: "Warschauer Aufstand dauert 63 Tage. Deutsche Einheiten ermorden im Stadtteil Wola in wenigen Tagen Zehntausende Zivilisten – eines der größten Massaker an Zivilisten im Krieg.",
         perspectives: [
-          "Polnische Aufständische: 'Warschau kämpft 63 Tage gegen deutsche Übermacht'",
-          "Deutsche SS: 'Befehl von Himmler - alle Zivilisten töten'",
-          "Warschauer Zivilisten: 'Sie erschießen uns auf der Straße - Frauen, Kinder, Alte'"
+          "Polnische Aufständische",
+          "Deutsche SS",
+          "Warschauer Zivilisten"
         ],
         agency: "Hitler befiehlt Ausrottung Warschaus, polnische Heimatarmee kämpft verzweifelt.",
         sources: ["Institut für Nationales Gedenken", "Warschauer Aufstands-Museum"]
@@ -5541,12 +4724,11 @@ L.Marker.include({
         year: 1945,
         title: "Atombombe auf Hiroshima",
         coords: [34.3853, 132.4553],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Atomic_bombing_of_Japan.jpg/300px-Atomic_bombing_of_Japan.jpg",
         description: "USA wirft erste Atombombe ab. Über 100.000 Menschen sterben. Neue Ära der Kriegsführung beginnt.",
         perspectives: [
-          "US-Piloten: 'Diese Bombe wird den Krieg beenden'",
-          "Japanische Zivilisten: 'Pika-don - ein Blitz, dann war alles verschwunden'",
-          "Hibakusha (Überlebende): 'Schatten in die Wände gebrannt - nie wieder!'"
+          "US-Piloten",
+          "Japanische Zivilisten",
+          "Hibakusha (Überlebende)"
         ],
         agency: "Truman entscheidet über Superwaffe, japanische Zivilbevölkerung schutzlos.",
         sources: ["Truman Presidential Library", "Hibakusha-Testimonials"]
@@ -5555,11 +4737,10 @@ L.Marker.include({
         year: 1945,
         title: "Befreiung der KZ",
         coords: [50.0279, 19.2042],
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Liberation_of_Auschwitz%2C_Soviet_soldiers_and_surviving_prisoners.jpg/300px-Liberation_of_Auschwitz%2C_Soviet_soldiers_and_surviving_prisoners.jpg",
         description: "Alliierte befreien die Konzentrationslager. Das volle Ausmaß des Holocaust wird sichtbar - 6 Millionen ermordete Juden.",
         perspectives: [
-          "Befreier: 'Das übersteigt unsere schlimmsten Vorstellungen - die Hölle auf Erden'",
-          "Überlebende: 'Wir haben überlebt, aber so viele sind tot - wir sind die letzten Zeugen'",
+          "Befreier",
+          "Überlebende",
           "Deutsche Zivilisten: 'Wir haben nichts gewusst' vs 'Wir konnten nichts tun'"
         ],
         agency: "NS-Führung plant Völkermord, Häftlinge kämpfen ums Überleben ohne Schutz.",
@@ -5772,7 +4953,7 @@ L.Marker.include({
       
       let perspectivesHTML = '';
       if (event.perspectives && event.perspectives.length > 0) {
-        perspectivesHTML = '<div class="perspectives-section"><h4><i class="fas fa-users"></i> Perspektiven & Stimmen:</h4>';
+        perspectivesHTML = '<div class="perspectives-section"><h4><i class="fas fa-users"></i> Perspektiven zum Nachforschen:</h4><p style="font-size:.9rem">Wie haben diese Gruppen das Ereignis erlebt? Suche dazu belegte Quellen.</p>';
         event.perspectives.forEach(perspective => {
           perspectivesHTML += `<div class="perspective-item">${perspective}</div>`;
         });
@@ -5786,7 +4967,7 @@ L.Marker.include({
       
       let sourcesHTML = '';
       if (event.sources && event.sources.length > 0) {
-        sourcesHTML = '<div class="sources-list"><h4><i class="fas fa-book"></i> Historische Quellen:</h4><ul>';
+        sourcesHTML = '<div class="sources-list"><h4><i class="fas fa-book"></i> Wo man weiterforschen kann:</h4><ul>';
         event.sources.forEach(source => {
           sourcesHTML += `<li>${source}</li>`;
         });
@@ -5811,42 +4992,44 @@ L.Marker.include({
     function showSourceDetails(source) {
       const modal = document.getElementById('modal');
       const content = document.getElementById('modal-content');
-      
-      const factionColor = source.faction === 'axis' ? '#e74c3c' : '#3498db';
-      const factionText = source.faction === 'axis' ? 'Achsenmächte/Täter' : 'Alliierte/Opfer';
-      
+      // Farben mit ausreichendem Kontrast zu weißer Schrift (WCAG AA)
+      const factionColor = source.faction === 'axis' ? '#A93226' : '#1F5F99';
+      const factionText = source.faction === 'axis' ? 'Seite im Krieg: Achsenmächte' : 'Seite im Krieg: Alliierte';
+      const link = source.url ? `<p><a href="${source.url}" target="_blank" rel="noopener noreferrer">Fundstelle öffnen</a> (externe Seite)</p>` : '';
       content.innerHTML = `
         <h3><i class="fas fa-user"></i> ${source.name}</h3>
         <p><strong>${source.title}</strong></p>
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
           <div style="background: ${factionColor}; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">
             ${factionText}
           </div>
-          <div style="color: #666; font-size: 1rem;"><i class="fas fa-map-marker-alt"></i> ${source.location}</div>
+          <div style="color: #444; font-size: 1rem;"><i class="fas fa-map-marker-alt"></i> ${source.location}</div>
+          ${source.art ? `<div style="color: #444; font-size: 1rem;">Art der Quelle: ${source.art}</div>` : ''}
         </div>
-        
+
         <div class="source-quote">
           <strong><i class="fas fa-quote-left"></i> Kernaussage:</strong><br>
-          "${source.quote}"
+          ${source.quote}
         </div>
-        
+
         <div style="margin: 20px 0;">
-          <strong><i class="fas fa-scroll"></i> Vollständiges Zeugnis:</strong><br>
+          <strong><i class="fas fa-scroll"></i> Auszug aus der Quelle:</strong><br>
           <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid ${factionColor}; margin-top: 10px; line-height: 1.6;">
             ${source.fullQuote}
           </div>
         </div>
-        
+
         <div class="sources-list">
-          <h4><i class="fas fa-archive"></i> Archiv-Quelle:</h4>
+          <h4><i class="fas fa-archive"></i> Fundstelle:</h4>
           <p>${source.source}</p>
+          ${link}
+          <p style="font-size: .9rem; color: #444;">Prüfstatus: Wortlaut mit der Fundstelle abgeglichen (${source.pruefung || 'noch offen'}). Auslassungen sind mit … markiert.</p>
         </div>
-        
+
         <div class="source-context">
           <strong><i class="fas fa-info-circle"></i> Kontext:</strong> ${source.context}
         </div>
       `;
-      
       modal.style.display = 'block';
     }
 
